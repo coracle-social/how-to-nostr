@@ -115,9 +115,94 @@ The benefit here is that new information about the event ID can be added associa
 
 This is the same trade-off as exists in programming languages when choosing named vs positional arguments (for example python's `*` construct). Named arguments make it a lot easier to maintain backwards compatibility as a function's signature evolves, and the same is true of nostr events.
 
+# Behavior and Data
+
+Tags can fall into one of three categories: data, filters, and behavior. These three things are often intermingled and hard to differentiate. This terminology is my own, and not reflected in any specifications or event structure, but I think it's useful for understanding how different design concerns interact.
+
+"Data" tags are primarily useful for handling or displaying the event. "Filter" tags might also be data tags, but are especially useful for filtering and retrieval. "Behavior" tags introduce additional context that determines how implementations should handle an event, independent of the specification which defines the event's kind.
+
+An example of a "data" tag is the NIP 92 `imeta` tag, which includes metadata for a URL for display. Because imeta is not a single letter, most relay implementations are not going to allow filtering by `#imeta` (which wouldn't make sense anyway). Imeta is only useful for enhancing the rendering and handling of a given event after you've already retrieved it.
+
+In contrast, `t` tags are useful not only as data, but as filters, since they represent "hashtag" or "topic". Since they are a single letter, it's possible to filter events by topic.
+
+Finally, tags like NIP 40's `expiration` tag are entirely orthogonal to the semantics of the event's kind, and can be applied to any event to request special handling by relays.
+
+These three are subtly different; as a result, they were conflated when nostr was originally designed. I believe this was a design mistake which introduces conflicts into the semantics of certain tags.
+
+The difference between "data" and "filter" tags isn't too consequential because filtering tags are often useful as data as well. Plus, the two are somewhat differentiated based on whether the tag key is a single letter or multiple characters.
+
+Behavior tags, on the other hand, are not defined by an event kind's spec, but by some other NIP, and can be applied to any event. Here are some examples:
+
+- NIP 70 defines a `-` tag, which specifies that an event should only be published by the event's author to a relay
+- NIP 29 defines the `h` tag, which is used in to publish an event to a "group" or "room"
+- NIP 40 defines the `expiration` tag, which is used to request deletion after a certain amount of time
+
+These tags in particular aren't too problematic since they're not re-used in other places, but there are some tags which are defined in a particular way by certain specs, but whose usage has been applied to other events, often in different ways. An example of this is the `e` tag, which is used in the following ways:
+
+- To indicate reply/reaction parent (NIPs 10, 25, 17)
+- To indicate which event a wiki article was forked from (NIP 54)
+- To request a merge into a wiki article (NIP 54)
+- To build a transaction history graph (NIP 60)
+- To reference auctions and bids (NIP 15)
+- To indicate any number of different event kinds in lists (NIP 51)
+- To indicate the object of a report (NIP 56)
+- To indicate moderator approval of a post (NIP 72)
+
+That a single tag can sustain so many different meanings is a testament to the effectiveness of the `kind` system. This would all be fine, if `e` tags didn't _also_ indicate the "mention" of an event by id, which is specified in old versions of NIPs 10 and 18, and NIP 23. This pattern of "mentioning" events by `e` tag is intended to be applicable to any event - but this comes into conflict with all the special meanings enumerated above, which means it's impossible to unambiguously use the "generally applicable" meaning of the `e` tag on any event kind that defines `e` tag semantics.
+
+This problem could have been solved by separating data, filter, and behavior tags into separate fields on an event, rather than coupling a tag's name with its semantics. One `e` tag could be placed in a `filter_tags` field, and a different one in the `data_tags` field. But this is just me imagining alternate futures. In practical terms, this problem is just something to keep in mind when designing tags that can be applied to "anything", especially when they need to be indexable.
+
+When resolving the meaning of a tag, always first look at the specifications for the event's kind, which has the right (being the most specific spec) to override any general tag behavior. Only secondarily should you look at specifications that define tags in a broad sense.
+
+# Behavior and Data Part Deux
+
+Another example of this data/behavior conflict is the idea of event kind ranges.
+
+When the protocol was first built, there was no special behavior attached to event kinds. But eventually, kind `0` profile metadata events started clogging up relay databases with different versions of users' profiles. In order to avoid a bunch of redundant profile metadata events, it was decided that kind `0` should be "replaceable". In other words, every time a user publishes a kind `0` event, the relay should delete all the old kind `0`s from that pubkey.
+
+This freed up room in the database, but it also eliminated the ability to fetch multiple versions of user metadata, which means that race conditions that occur as a result of updating user metadata in multiple places at the same time can no longer be resolved except by special purpose relays or services that retain all versions of your profile metadata.
+
+Events are amazing because their ID is the hash of their content, which makes them a "referentially transparent" data type. In other words, events are "content addressable" - if you have an event ID, you know the event is never going to change underneath you.
+
+But when replaceability was introduced, a new way to refer to an event even if the content changes became necessary. And so the "address" was born. An address is a string in the format of `kind:pubkey:identifier` which points to all events with the same key, pubkey, and identifier.
+
+This solution was also applied to kind `3` follows, and seemed useful enough to make into a general pattern. As a result, different event "ranges" were invented in order to provide certain variants of this behavior.
+
+Kind `1` through `9999` (except `3`) are "regular" events with no special behavior. Kind `10000` through `19999` are "replaceable" events which have no "identifier" address component. The idea with these is that users can have only one event of each "replaceable" kind. Kind `10002` relay selections list is an example - when you publish a new event of that kind, it replaces any previous ones.
+
+The next range is kind `20000` to `29999`, which indicate "ephemeral" events which are addressable in the same way but have the additional behavior of not being retained by relays - they're deleted immediately after being broadcasted to other clients that are listening for them.
+
+Finally, we have kind `30000` through `39999`, which are called "parameterized replaceable" events. These act the same way as "replaceable" events, but are partitioned by an identifier contained in the event's `d` tag. This allows the user to create multiple replaceable events for their pubkey. For example, editable kind `30023` blog posts.
+
+This all makes sense, but it has a major downside - it couples kind numbers with behavior, regardless of what spec the kind is defined by. You might think this is be okay because specs can just choose a kind that is in the correct range. And that's mostly true, except that these retention/replacement policies are really orthogonal to the data type represented by the kind. It's entirely possible to conceive of multiple follow lists, or a replaceable microblogging event. This behavior really should have belonged in behavior tags, which would allow users to select retention behavior for any event regardless of content type. In fact, we have an `expiration` tag, which is a superset of kind `2XXXX` ephemeral event functionality. That entire kind range is useless now. Similarly, any event could be made replaceable by adding a `d` tag (empty, if regular replaceable functionality is desired).
+
+But I digress. We might get these extensions in the future, but for now we have to work with the limitations of kind ranges. My point is, when you're defining new event types, you should have a slight bias towards regular non-replaceable events, because they don't break referential transparency. But given that replaceable event support is nearly universal, it's okay to use replaceable events. It's definitely not a bad compromise.
+
+# Deleting Events
+
+One final bit of behavior that's worth mentioning in this context is deletion requests. These are kind `5` events that can either `e` tag an event's ID or `a` tag an event's address. Relays receiving a kind `5` event are expected to delete all matching events - provided the author is the same.
+
+It's important that these be considered deletion _requests_ specifically, not actual deletions, because relays are not obligated to honor the request (although in practice many do).
+
+This is the thing about signed data. Once it's published, there's no way to unsign or unpublish the data. Anyone who has a copy can keep it. This is great for keeping public figures accountable for their words and actions, but not great for taking something down that shouldn't have been posted. Care has to be taken when using signed data. This is true of unsigned data as well, which can always be screenshotted or copied, but signatures remove deniability. This is a good trade-off for public broadcast social media, but it is something to keep in mind.
+
 # Filtering Events
 
-# Modifiers and Data
+Another concept that is closely related to events is that of filters, which are a data structure that allows clients to request specific events from relays. A filter is a dictionary with one or more of the following fields:
+
+- `ids` is a list of hex-encoded event ids
+- `authors` is a list of hex-encoded pubkeys for matching event authors
+- `kinds` is a list of a kind numbers
+- `since` and `until` are an second-granularity unix timestamps for filtering based on `created_at`
+- `limit` is the maximum number of events relays should return in the initial query
+
+In addition, filters can be applied to event tags by prefixing the tag name with an octothorpe and adding it to the filter - for example, `#p` can be set to a list of pubkeys in order match events with a matching `p` tag. Relays generally only support filters for single-letter tags in order to reduce the number of database indexes that have to be maintained.
+
+There are some other less common filter extensions which include:
+
+- Prefix matches allow for matching event ID, pubkey, or tag value by partial value
+- An additional `search` property is defined by NIP 50 and implemented by some relays
+- Negative matches have been proposed, but rejected because of the impact they would have on relay performance
 
 # A Light Touch
 
@@ -160,4 +245,4 @@ I think there's a balance to this. I don't think we can be backwards compatibili
 
 When introducing new backwards-compatible functionality to Nostr, it's usually best to enhance existing data formats as long as it doesn't result in overloading a single kind with multiple uses. When breaking backwards compatiblity, however, it's best to create an entirely new kind and evangelize for migrating to it. This is much harder than modifying the behavior of existing event kinds, but it's far more polite. The downside is it breaks network effects - and can still result in a poor UX for clients that don't adopt the new format if it results in missing content.
 
-Over time, Nostr protocol development has gotten increasingly conservative. As use cases proliferate, it becomes more difficult to review new data formats. As implementations proliferate, it becomes more difficult to advocate for breaking changes. Nostr specifications are not sacred, but their effectiveness relies almost entirely on interoperability. Maintaining compatibility requires conscientousness, communication, and contributions to other projects - there's no better way to get people to listen to you than writing code to improve their implementation.
+Over time, Nostr protocol development has gotten increasingly conservative. As use cases proliferate, it becomes more difficult to get feedback new data formats. As implementations proliferate, it becomes more difficult to advocate for breaking changes. Nostr specifications are not sacred, but their effectiveness relies almost entirely on interoperability. Maintaining compatibility requires conscientousness, communication, and contributions to other projects - there's no better way to get people to listen to you than writing code to improve their implementation.
