@@ -70,3 +70,61 @@ Cryptographic identities are more private than claims that are shared with custo
 
 In contrast, when using asymmetric key pairs the only thing that can leak from the third party database is your public key, since your private key never leaves your own device. Of course there's a whole art to keeping your private key safe, which we'll get into later. But even without sophisticated key management cryptographic identities drastically decrease users' vulnerability to identity theft and phishing attacks.
 
+--- raw
+
+
+Identity is not the end of the story though, because from it stems all kinds of implications having to do with connected identities in a system where cryptographic identities can not only protect data but also be referenced elsewhere. It becomes possible to form connections between these disconnected identities simply by referencing another user's public key in a given context. An obvious example of this is mentioning someone in a microblogging application. That person can then be notified that someone was talking about them. They can open up that tweet in their client of choice and view and reply as the spirit moves them.
+
+Likewise, direct messages become possible between cryptographic non-custodial identities. Likewise, payments. Nostr's Zaps are addressed to another person's public key.
+
+Nostr has lists of people, follow starter packs, and follow lists. And then of course there are the implicit connections where if someone reacts positively to a certain person's notes over and over again over time, even if that person isn't explicitly referencing, even if they're not following that person, that can be seen as an implicit endorsement of that person's entire identity. Weak, but it is signal. And this is where the data analysis problems of centralized social media and the risks associated with public and open social media rebound to the user's benefit once again.
+
+Through simplistic analysis of follow graphs or more sophisticated analysis of explicit and implicit Web of Trust connections, identities can have reputation associated with them. Reputation that is relative to your vantage point in the network.
+
+In concrete terms, if you follow someone, then that person is explicitly trusted by you, at least in whatever terms "follow" means. It doesn't mean that you endorse their views, or that you would trust them to watch your kids, but it is nothing more or less than a follow.
+
+Well, that person also follows people on the network. And so, by virtue of that one connection that you explicitly made, many more weaker connections are implied. And this allows you to traverse the network in order to reach parts of it that you aren't explicitly aware of.
+
+As mentioned above, other types of connections can be brought into this graph analysis for any number of purposes. For example, Coracle's Web of Trust is simple. It calculates a score, which is the number of people who you follow who follow a given person minus the number of people you follow who mute that person, which allows for negative weight connections to be established. Meanwhile, Vertex is a service that calculates much more sophisticated, PageRank-style web of trust scores. The trade-off between these is that this follow graph calculation can get really heavy really fast. Coracle only scores things with a single hop or with two hops, whereas other algorithms may go to three or four or even six degrees of Kevin Bacon and incorporate other metrics as well.
+
+There is a school of thought that would seek to extend these implicit or weak attestations with much more explicit, strong and potentially annotated attestations. For example, "I trust this particular person at a level of seven to recommend movies."
+
+There are indeed contexts where you might want something like that. For example, a Goodreads alternative. But in most cases, creating the data required to build these sophisticated granular webs of trust is difficult to incentivize users to create, especially when it reveals so much about themselves.
+
+And so Web of Trust is valuable less for embodying real world trust in a digital setting than for embodying digital trust, which is in most cases a very different thing. Digital trust is concerned with issues related to spam or ideology or entertainment value, which are a fairly low bar and can be used effectively to prevent spam or harassment or illegal content, but which aren't good for choosing peers in a financial transaction.
+
+There are, for example, efforts to rate relays or ecash mints by taking advantage of the social graph. But the effectiveness of such reviews is very nuanced. For example, if an ecash mint has a large number of high reviews, that means next to nothing about how trustworthy the mint actually is, only that it hasn't rugged users yet. Odds are the mint has gained this reputation based on low latency, high availability, or good customer service.
+
+This is the problem with reviews in general. A buyer who's already transacted has a much lower stake in the review process than someone who has not yet completed the transaction. But Web of Trust does go some way towards solving the abuse of reviews that's so prevalent on Amazon and other shopping sites, where platforms are essentially Sybil attacked because they don't have a vantage point from which to assess the reputation of any given reviewer. Instead, companies that want to market their products spin up a number of fake accounts and leave high ratings with bogus reviews just to get cheap products promoted and crowd out more organic small scale options.
+
+As I mentioned before, Web of Trust isn't a single thing. There are simple, straightforward algorithms and there are more complex ones, more and less effective ones. But Web of Trust doesn't have to be strictly trust or even social signals. Nostr has a few other affordances that can be used to supplement the trust graph. For example, NIP-05 registration. If a user has a NIP-05 address that's issued by a highly reputable address service, then perhaps they can be trusted despite having no social signal. Similarly, a public key that begins with several zeros demonstrates that a certain amount of work was put into generating the key. NIP-13 also allows for proof of work generation on an event by event basis. Proof of work on its own is definitely not a panacea, but it can make spam slightly more expensive and can be combined with Web of Trust for a more robust trust profile.
+
+This is important for users who are new to the network and don't yet have any attestations from other users about the authenticity or value of their activity. In other words, if no one has ever tweeted, how do you know whether to show their post? How do you know whether to show someone's post if they've never received any interaction from anyone before?
+
+When bootstrapping the network, when bootstrapping your personal network, new users are often left out in the cold. So the door does have to be left open a crack for these new users without allowing spammers and bad actors to flood in.
+
+Now, all of these things are predicated on users being able to securely and conveniently hold their private key, which is a big assumption. Over a decade of research has gone into building key storage solutions for Bitcoin wallets and the trade-offs involved in those design decisions. Nostr is just as complicated.
+
+The stakes are slightly different. Whereas with Bitcoin, you can lose real money. On Nostr, you can lose your social identity. It's honestly hard to know which one would be more destructive—it depends on who you are and what you use social media for, and how much money you have.
+
+Nostr also has some disadvantages in comparison with Bitcoin. With Bitcoin you can rotate keys by simply sending funds to a new address and throwing away the old address. On Nostr, your identity is your public key. And so if your key is lost, well, on Bitcoin you can't do anything anyway if your key's lost. But on Nostr, if your key is compromised or in danger of being compromised, there's not really anything you can do.
+
+Key rotation is something that we have to figure out on Nostr if Nostr is going to succeed. There have been some proposals, but none of them have gained enough traction to be implemented. So it remains an open question. However, there are a lot of things we can do to make key storage safer and more convenient.
+
+A number of different signer protocols have been experimented with, including NIP-07 browser signer extensions, NIP-55 Android Intent-based signers, and NIP-46 remote signers.
+
+In my opinion, NIP-46 is the most universally available of these options and also provides for the best user experience. Well, its user experience isn't quite as simple as it is for NIP-07 or NIP-55, unless you take into account that neither of those options works remotely and both require the user to install something, an additional application before they start using Nostr, which is an insane amount of friction to impose.
+
+NIP-46 on the other hand works anywhere from anywhere. You can install your signer application on your phone, on your desktop, or in the cloud, put your key there or have it generate a new one and move forward. Particularly promising are multi-signature bunkers, which allow for the selection of multiple unrelated custodians, each of whom has only a fraction of your whole private key, which means that unless they collude, your key is safe. Of course that's a big assumption and so the correct custodians have to be chosen, and for new users who aren't going to have familiarity with the ecosystem they're inevitably going to offload their selection to the application through which they're signing up.
+
+The same risks apply to custodial signers that apply to ecash mints. But with some care, a combination of manual selection on the part of the application developer and Web of Trust based heuristics can be used to choose unrelated, trustworthy custodians for new users.
+
+A common signature scheme for new users is two of three, where two shards of the key are required in order to sign an event. But this threshold could be increased to three of five or four of five or even more, and the user could hold one of the shards themselves in the application.
+
+Another good pattern for onboarding users to keys is sending the user an email with an encrypted version of their private key. The user can provide a password which can then be used to encrypt the private key and they can receive that opaque version, forget about it, and then retrieve it later when they need it. This is great because users are not going to set up proper key storage the first time they try a new social media application. Deferring the learning process until they have a stake in the network is going to see a much higher rate of success.
+
+Other patterns that are common that I don't think should be used on Nostr include seed words. Seed words are great for securing Bitcoin in cold storage because cold storage requires manual entry. A 64-character hex key is going to be a lot harder to enter than 12 or 24 words, especially if you're engraving the characters on steel.
+
+But on Nostr, cold storage is just not necessary, except in the most exceptional of cases. On Nostr, keys need to be hot because they need to be able to sign things frequently. Otherwise you're constantly entering your seed words. Seed words are basically useless for storing Nostr keys. Just put your key in a password manager. If you're really paranoid, encrypt it and then put it in your password manager.
+
+But your key is going to be on your signing device wherever that is and that signing device is going to be connected to the internet. This is another reason that multi-sig is worth investing in. Even if you're not using custodians to hold your keys, you can get a lot of benefit out of multi-sig by placing shards of your key on different devices. That way if a single device is compromised, that shard can be revoked and you can rotate your signer setup without rotating your key.
