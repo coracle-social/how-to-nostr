@@ -69,8 +69,6 @@ Likewise, some data makes sense to group together in a single event, for example
 
 There is a guideline listed in the nips repository, that "there should be no more than one way of doing the same thing." Because nostr is a social protocol, it depends on network effects, not just of users, but of standards. The more implementations that use a single kind, the more users are in turn able to interact. So when creating a new standard, check to see if there is an existing spec and follow it if at all possible. This might seem to contradict my advice to error on the side of proliferating data types, but it's important to understand that the "one way" rule is only an _ideal_, and can still be violated if design goals vary, or an existing spec is broken in some cricial way. Just be prepared to defend your divergence from convention if you want other people to migrate to the new way of doing things.
 
-# Immutability and Replaceable Events
-
 # Timestamps are liars
 
 There are an incredible number of [falsehoods programmers believe about time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). Dealing with time is inherently difficult, especially in a distributed system which has no single timestamping authority.
