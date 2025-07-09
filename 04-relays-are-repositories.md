@@ -146,23 +146,46 @@ In both cases, events belong somewhere that isn't currently well-defined by the 
 
 # Bootstrapping
 
-For that you need another heuristic, but of a different kind. Currently the Outbox model is supported by known indexing relays that serve, that aggressively replicate and serve kind 1002 events. Once kind 1002 events are retrieved, any other event that abides by the outbox model, including 10,050 DM inboxes, can then be found on the author's outbox relays.
+One event kind that I've thus far avoided introducing a heuristic for is `kind 10002` relay selections. If these determine where the rest of a user's public notes live, what determines where they belong? This is the classic bootstrapping problem of networks, for which you need a heuristic of a different kind.
 
-But this doesn't solve the geocaching index problem because geocaching indexes are not related to pubkeys but to relays, which means a separate type of indexing relay could be used to store the geocaches. The same indexers could store geocache index events or 10,002 could be overloaded to indicate support for geocaching relays.
+In other words, you have to start somewhere. It's impossible to access a "network" without accessing particular nodes. When not yet connected, nodes have to be selected by some heuristic external to the network itself.
 
-But as I mentioned in the data modeling section of this book, overloading kinds is always a bad idea. Breaking things down into more event types means that things may not be as easy because you don't automatically get indexing for your geocaching index events. But it does mean that things are broken down more granularly, and relays and clients can choose what data they prefer to download. So when bootstrapping a new heuristic like geocaching, it's necessary to begin by selecting new indexer relays or expanding the policy of existing indexer relays to include the geocaching index events. This is an inherently political process that doesn't scale well in terms of censorship resistance out of the gate.
+The most common way to solve this problem is to hard-code "indexer" or "default" relays in implementations, from which point other relays can be discovered using NIP 65, NIP 66, or relay hints. Alternatively, a distributed hash table (DHT) might be used to store events related to relay selection, improving censorship- and sybil-resistance.
 
-For someone who has created a geocaching client and they wish to bootstrap this heuristic, they're going to be the only one running a geocaching index relay. But that's OK. They're the only client interested in the use case. And so until that standard is adopted by other members in the network, it's effectively a walled garden. But the data format is open. So anyone else can create a client that uses geocaching events, or if they're an avid geocacher, another relay that indexes geocache index events.
+In either case, events need to be stored in one of these few starting points in order to be discoverable. If they can't be found, none of the events they help locate can be found either (except accidentally).
 
-And so the resilience of the index scales with the network effect built around the data type. This is in contrast to DHT-based solutions like IPCAR, which uses the mainline DHT. The mainline DHT is extremely censorship-resistant and huge.
+In practice, hard-coded lists of bootstrapping relays work pretty well for the same reason that a small amount of redundancy in user relay selections can dramatically reduce the risk of censorship. Because hard-coded indexer relays are selected by implementation authors (or by users themselves), they're easy to swap out if any of them become censorious or go offline. This is strictly worse than using a DHT, but the strategies are not mutually exclusive. As time goes on, I expect a DHT-based solution to the bootstrap problem to be introduced as a progressive enhancement.
 
-But it makes no difference in how aggressively a given piece of content or a given index entry is replicated. Even if only one person cares about a given index entry, that entry will be replicated across the entire DHT as long as the user continues to refresh it.
+One difficulty with the bootstrap relay model, however, is that different types of bootstrapping events are needed to support different relay selection heuristics. The outbox/inbox heuristics are defined by `kind 10002`, but topic-, location-, community-, or language-based heuristics aren't, and any relay discovery events that support them will certainly be replicated less aggressively.
 
-This is not a terrible thing, in fact, it would probably be useful to add indexing on mainline or another DHT. Mainline uses a different cipher suite so secp256k1 keys can't be used as DHT addresses.
+The solution to this is to take a step backward, and instead of focusing on `kind 10002` as the entry point to the network, switch to `kind 30166` relay discovery events for bootstrapping. Of course, since relay discovery events can be published by anyone, and aren't necessarily related to the user's web of trust, another heuristic has to be used to bootstrap trust - both indexer relays and indexer pubkeys might be hardcoded by implementation developers in order to avoid sybil attacks by untrusted relay monitors, or this trust might be delegated to the indexer relay operators. In either case, the user is delegating bootstrap relay selection to their client's developer.
 
-This would provide meta-redundancy in that it would allow bootstrapping to occur using any number of different technologies with different trade-offs, but the bootstrapping problem is always there. You're always going to have to start somewhere, whether it's a gateway or a simple relay.
+Let me give an example to make this more concrete. Suppose you want to find relays that store `kind 21` video events about cats. Beginning with 2-5 semi-trusted relays which the client developer has chosen to curate relay discovery events, the client can first send a request for relay discovery events tagged with the desired topics, and which support the desired event kinds:
 
-Luckily the problem of indexing is orthogonal to Nostr. It may not fit tidily into mainline DHT, but there are plenty of other decentralized technologies that can be used to host indexes.
+```json
+["REQ", "subid", {kinds: [30166], "#t": ["cats", "cat", "catstr"], "#k": ["21"]}]
+["EVENT", "subid", {
+  "kind": 30166,
+  "created_at": 1722173222,
+  "content": "{}",
+  "tags": [
+    ["d", "wss://somerelay.abc/"],
+    ["t", "cats"],
+    ["k", "21"],
+  ],
+  "pubkey": "<pubkey>",
+  "sig": "<signature>",
+  "id": "<eventid>"
+}]
+```
+
+The client can then apply additional heuristics (like relay reviews for example) to these results, then send a request for the desired content to each relay url advertised.
+
+The same heuristic can be used for any event kind, provided at least one of your bootstrap relays is reliable. Hard-coding relays isn't ideal, certainly, but with these limitations in mind, it can be "good enough", consistent with the nostr ethos.
+
+The downfall of all of this is to what extent developers are interested in supporting the decentralization of the nostr network. Hard coding a relay to read from and publish to is easy. Hard coding 2-5 bootstrap relays from which relay discovery events can be fetched for the purpose of finding relays hosting use-case-specific index events in order to find the desired content... is hard.
+
+But that's why I'm writing this book. Decentralization is not easy - but it has massive payoffs if developers go to the trouble of building robust, principled implementations of the protocol.
 
 
 
@@ -170,7 +193,7 @@ Luckily the problem of indexing is orthogonal to Nostr. It may not fit tidily in
 
 
 
-
+# Relay Hints
 
 Something that frequently gets confused with heuristics for relay selection is relay hints. A relay hint is useful in certain places in the protocol, or is recommended in certain places of the protocol for short-circuiting the usual heuristic for discovering events, particularly in places where there's not sufficient information for fetching a given event. An example of this is kind 1111 comments. A comment is created.
 
