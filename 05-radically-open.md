@@ -101,155 +101,90 @@ First of all, the breadth of the nostr protocol makes it possible to change on p
 
 In addition, there can really be no changes by fiat (even if, as sometimes happens, backwards-incompatible changes make it into a specification document without community buy-in). Nostr is an adversarial environment, and relies on developers to actually implement changes they want to see. To the extent that an implementation has active users, it can choose to go along with the fork, or hold back.
 
-In this way, implementations that want to sponsor either a new protocol feature or an incompatible change can exert pressure on the rest of the network by threatening more or less incompatibility. Likewise, implementations that wish to keep the protocol as is, or not implement a new feature can do the same. This can be done by shaming competitors in public while maintaining interoperability, or by actually breaking compatibility. Forks always come with the risk of alienating users or being on the losing end of network effects, which is a natural restraint to reckless behavior.
+In this way, implementations that want to sponsor either a new protocol feature or an incompatible change can exert pressure on the rest of the network by threatening more or less incompatibility. Likewise, implementations that wish to keep the protocol as is, or not implement a new feature, can do the same. This can be done by shaming competitors in public while maintaining interoperability, or by actually breaking compatibility.
 
-This dynamic is currently playing out with Nostr direct messages. Nostr's original direct messaging implementation, NIP-04, leaks a lot of metadata, undermining user privacy to the point that bots were created that monitor and publish information about who is conversing with whom.
+This dynamic is currently playing out with Nostr direct messages. Nostr's original direct messaging implementation (NIP 04) leaks a lot of metadata, which severely undermines user privacy. This problem was severe enough that it led to a new DM standard (NIP 17) which leaks signficantly less metadata. As of the time of this writing, NIP 17 is adopted in the majority of popular Nostr clients, with two significant exceptions - both of which are focused on high quality UX, and so put a premium on DM delivery and product focus.
 
+In a sense, the creation and adoption of NIP 17 DMs can be seen as an attack on these clients because breaking DMs undermines their primary value proposition. The intention behind this "attack" is to protect user privacy but regardless, the introduction of incompatibility forces an eventual resolution to the issue. Eventually, one faction or other will lose users to the other.
 
---------------
+One thing to keep in mind, however, is that this kind of adversarial action can cause the protocol itself to lose users, harming all sides. For this reason, backwards incompatibility should be handled with care. Forks always come with the risk of alienating users, or being on the losing end of network effects, which is a natural restraint to reckless behavior.
 
+Forks are a fact of life in the context of an adversarial system. Any actor can choose to fork at any time, for any reason. Even if some forks are well-intentioned and constructive, others may not be. For this reason, implementers must always be prepared to defend their version of the protocol both technically (through defensive coding) and politically (by educating users about the fork and persuading other developers of their view). Core protocol features will gain momentum over time, contributing to stability, but there will always be a certain amount of chaos at the edges. This chaos is a necessary consequence of a radically open protocol.
 
+# Hackability
 
+I've been talking a lot about what interoperability is and how to support it, but I haven't really mentioned what exactly interoperability is for. What good is it for multiple implementations to be able to talk to each other?
 
+This goes back to the problem that Nostr is trying to solve, which is Big Tech's capture of social media platforms and by proxy, their users. In legacy social media, users don't have what's called a credible exit - which is to say that they can't leave a platform and retain their identity or their data.
 
+In order for this to work, not only does data have to be open and unconstrained by custodians (which is what relays and signatures give us) there also have to be multiple implementations that can _interpret_ this data. A user has to be able to have a choice; if there's only one implementation because of protocol complexity or propriety, then users don't have the ability to exit because they can't enter something else. In order for users to move, there need to be off-ramps and on-ramps.
 
-This problem was severe enough that a new DM standard was created which leaks less metadata. As of the time of this writing, this new version is adopted in the majority of the most popular Nostr clients with two important exceptions.
+Openness makes it possible for multiple implementations to interoperate. But that's a fairly low bar. This is true of (for example) the SQL standard, which defines certain data types, syntax, access control, and a framework for transaction isolation levels, making it possible to access the same database from multiple different software applications. But there are limits to the interoperability this provides; application code remains proprietary. While it's possible to look at a database schema and get a vague sense of what the data is, it's much harder to reverse engineer how it's created or used without looking at the accompanying application.
 
-These clients have lagged behind in adoption because, partly because of a commitment to backwards compatibility, and partly because of a different set of priorities. Both of these clients are focused on high quality UX, and yet ironically, their users are being left behind on an outdated standard that is losing support across the rest of the network. Right now, Nostr DMs are useless because of these holdouts, or depending on your perspective, because of the people who chose the fork. But to the extent that the lack of support for old style DMs makes user experience poor, one faction or other of these will lose users to the other faction. Or potentially the protocol will lose its users, which is why backwards incompatibility should be used with care.
+In the same way, Nostr protocol specifications are only one resource for helping developers create interoperable implementations. This is particularly true because popular features may not necessarily be documented in every case. If a popular implementation isn't open source, it becomes much harder to reverse engineer these protocol features in order to allow others to adopt them. Open-source software function as reference implementations which can be read, copied, and adapted to support new implementations of the same use case. This indirectly benefits users by providing more options to choose from.
 
-This means that there is always a certain amount of chaos involved in Nostr Protocol interoperability. But as Pablo F7Z says, embrace the chaos.
+But it also benefits users directly. AI coding assistants are bad at a lot of things, but one thing they can do is allow non-technical users to take off-the-shelf software and adapt it to their needs without having to understand what's going on under the hood. Software fails its users more often because of cosmetic problems than because of flaws in the implementation of their problem domain.
 
-The chaos is a necessary consequence of a radically open protocol.
+A broken click handler can render tens of thousands of lines of well-tested code useless. In the same way, adding a new button to an existing piece of software is often a trivial operation, but requires the expertise of the end user to determine what the button should do. Certain affordance may also only make sense to a single person, and so would never get implemented due to the maintenance cost outweighing the benefit rendered to the single user. Coding assistants enable users to convert rigid, opaque software platforms into environments full of affordances they can take advantage of in the same way an experienced programmer can customize his editor or terminal by writing ad-hoc programs.
 
----
+Giving end users the ability to create tools for working with the protocol more directly only increases the utility the protocol offers those users. Even if something goes wrong and the AI hallucinates and creates a fork in the protocol, the damage is limited by virtue of the implementation being a one-off - and can easily be reversed by re-prompting. Diversity of implementations also improves the health of the network itself by distributing control over implementations, making the protocol harder to attack.
 
-I've been talking a lot about what interoperability is and how to support it, but I haven't mentioned what interoperability is for. What good is it for multiple implementations to talk to each other?
+This dynamic is maybe more important than it sounds at first. I think this is one of the most important things about open protocols and one of the most exciting things about AI-assisted coding. Used properly, AI-assisted coding has the ability to tear down walled gardens at a scale that we can't even imagine.
 
-This goes back to the problem that Nostr is trying to solve, which is Big Tech's capture of social media platforms and by proxy, their users. In legacy social media, users don't have what's called a credible exit, which is to say that they can't leave a platform and retain their identity or their data.
+If AI has the effect of amplifying user agency in the digital world, users become more capable of shaping the digital world based on their values and goals, which are invariably at odds with the software platforms that we're trapped inside in the current iteration of the internet.
 
-In order for this to work, not only does data have to be open and unconstrained by custodian, which is what relays and signatures give us, there also have to be multiple implementations. A user has to be able to have a choice. If there's only one implementation, because of protocol complexity or because the protocol is proprietary, then users don't have the ability to exit because they can't enter something else. In order for users to move, there need to be off-ramps and on-ramps.
+Technology doesn't solve problems, people do. Technology is an extension of human will into the world. And yes, there can be unintended consequences. But when individuals use what Ivan Illich calls "convivial tools", their agency is multiplied and the negative externalities are limited to the scale at which that individual operates.
 
-Openness makes it possible for multiple implementations to interoperate. But we've already said that and that's a fairly low bar. This is true of ZeroMQ, which is a messaging protocol, or JSON, which is a data format. Two computers can talk to each other if they both understand JSON and send it over ZeroMQ.
+This creates a diverse ecosystem of self-interested actors who can not only do what they want in the digital world, but protect themselves from other people who would take advantage of them, either through massive structures of control or through exploitation of centralized systems by outsiders.
 
-This means that those project users have credible exit in the sense that they can choose different libraries to handle their JSON parsing and message brokering needs.
+This attitude of creative use of software in order to overcome its limitations or repurpose it for the user's own agenda is encapsulated in the term "hacker". Hackers look at existing software not as complete or normative, but as an opportunity to do something new and subversive. The hacker mindset is the exertion of human agency over technological systems, and is desperately needed in our day of technological passivity.
 
-But those users are at a very low level and they're building products that don't have the same sort of openness in most cases. In fact, open source funding is a big problem because proprietary software is built on top of it and the proprietary software companies, which make all the money off of the open source developers' hard work, don't tend to contribute back to the developers making the open source software and giving them credible exit and open protocols.
+It could very well be that AI assistance, both in coding and in research and many other ways, is far more important than the existence of an open protocol. It may even obviate the need for protocol documentation to some extent because LLMs can reverse engineer whatever software is already in use. The role of the protocol could shift from a set of rules for how to implement enumerated functionality to a trellis on which organically synthesized human/machine language can grow.
 
-This is akin to building a closed source Nostr client on the open protocol.
+It's also possible that human nature and our willingness to put up with incredible levels of inconvenience will leave this opportunity untapped. The relative lack of adoption even simple things like browser extensions has seen is evidence of our natural inclination to be slaves to our technology. But it's possible AI agents may lead to the spread of something akin to the "hacker mentality" even among non-technical users - not because they make hacking "easy", but by unlocking the universal language of computing for use by non-specialists.
 
-Open source software is less fundamental than an open protocol, but it's still extremely important.
+# Application Ecosystems
 
-Because the protocol is descriptive, implementations that are widely adopted might create ad hoc undocumented protocol features. If the software isn't open, it becomes much harder to reverse engineer these protocol features in order to allow others to adopt them. I've personally looked at dozens of different code bases, source code, in order to understand how something works.
+Given the radical openness of the Nostr protocol, some additional mechanisms are necessary in order to cope with the certainty of running into event kinds that implementations don't recognize. It's categorically impossible for clients to implement support for every Nostr data format because new formats are created constantly. Implementations have to have a strategy for dealing with events they don't understand.
 
-My go-to is Nostrudel because Hazard and Amethyst because their developers try to implement as much of the protocol as they can, and their code is very readable and clean.
+Suppose a user embeds an event to a `kind 30023` long form article in a `kind 1` microblogging post and your client doesn't want to add render support for long form articles. How can you handle that event without knowing what it is?
 
-Because Amethyst is open source, I was able to understand how private zaps worked.
+A few mechanisms have been proposed for dealing with this. They could be more robust, but the foundation has been laid.
 
-Open implementations support an open protocol by making the actual working of the protocol accessible to developers, but it also benefits users directly.
+First, we have NIP 31, which proposes the inclusion of an `alt` tag on events which describes, in human readable language, what the event is. Following this, a Nostr client could look at a long form article, see an `alt` tag with the title of the article and an explanation of what that event actually is, and display that to the user.
 
-AI-assisted coding is good for certain things and bad at other things. But one thing it is very good for is allowing non-technical users to take off-the-shelf software and adapt it to their needs without having to understand what's going on under the hood.
+This is something, but it's not very compelling. This is really a dead-end solution, since all the user knows is that they aren't seeing content that they would like to see. There's no call to action for how to actually view the content (unless a link is included in the alt tag - which would be a brittle and centralizing way to handle the problem). Even a simple error message would probably be an improvement over alt messages because at least it would demonstrate to the user that something is indeed missing or broken.
 
-With AI assistance, it's easy to take a piece of open source software, run it, and change it as desired to have some feature that you've always wanted or to fix a bug that bothers you, or change the layout and color.
+Luckily, we have a better option. NIP 89 defines some mechanisms that can be used by clients for presenting a call to action when faced with unknown event kinds using a technique commonly known in programming as "reflection", which allows a program to inspect its own constructs at runtime and adapt accordingly.
 
-These are all well within the ability of normal users.
+In NIP 89, An "application handler" is a `kind 31990` event which includes tags describing a given application and its purpose, as well as affordances for opening a given event or profile in that application. Application handlers also include a `k` tag, which can be used to filter handler events.
 
-Even if something goes wrong, the AI hallucinates and creates a fork in the protocol. These one-off implementations, because they're built by an end user, rarely see much adoption. The user is just trying to scratch their own itch. If they create malformed events or use some data format in an incorrect way, the damage that they cause is limited only to their malformed content or user experience. And because they have taken responsibility for their user experience by creating their own solution, it's up to them to fix this if they're motivated.
+So in our scenario above, the microblogging client might ask the network for `kind 31990` handler events with a `k` tag matching `30023`. This would return a bunch of application handlers with `web`, `android`, `ios`, or other platform tags. The client can then present options for viewing the long form article to the user.
 
-This dynamic is maybe more important than it sounds at first. I think this is one of the most important things about open protocols and one of the most exciting things about AI-assisted coding.
+This allows implementations to reduce their scope in order to avoid implementing features they don't care about supporting, while at the same time improving the state of the network by advertising alternatives or complementary applications to their users.
 
-Used properly, AI-assisted coding has the ability to tear down walled gardens at a scale that we can't even imagine.
+This isn't something that a walled garden would ever want to do. Their impulse is always to vertically integrate either through acquisition or new product development. On Nostr, because implementations can enjoy the network effect of the entire protocol without implementing all of it, developers can afford to recommend alternatives. In fact, doing so makes their value proposition event stronger because users now have a myriad of alternatives to pick from based on their interests, not those of the platform.
 
-If we can encourage users, if AI has the effect of amplifying user agency in the digital world, users become more capable of shaping the digital world based on their values and goals, which are invariably at odds with the software platforms that we're trapped inside in the current iteration of the internet.
+NIP 89 further enhances this ability to search for handlers with `kind 31989` "handler recommendation" events. Because anyone can publish a handler event, it's not a good idea to present them to users without some level of vetting. Otherwise it would be trivial to impersonate an existing client in order execute a phishing attack. Even if application handlers are legitimate, knowing whether a given handler is "good" or not is important signal.
 
-Like I said earlier, it's not technology that fixes things. It's people who fix things. Technology is an extension of human will into the world. And yes, there can be unintended consequences. But when individuals use what Ivan Illich calls convivial tools, their agency is multiplied and the negative externalities are limited to the scale at which that individual operates.
+`kind 31989` recommendation events allow anyone to advertise clients that they use to handle a particular kind. In combination with web-of-trust analysis, these recommendations can be used by clients to validate a given application handler. Maybe only one person that the user follows uses an application handler, or maybe a hundred people do.
 
-This creates a diverse ecosystem of self-interested actors who can not only do what they want in the digital world, but protect themselves from other people who would want to take advantage of them, either through massive structures of control or through exploitation of centralized systems through hacking or phishing.
+The more popular app is, the more likely it is to provide the user with a good experience. At the same time, the handler with only one recommendation might still be able provide an interesting alternative to the popular app, eroding the hold that popular applications have on the network. This can help mitigate the concentration of power in a few popular implementations.
 
-It could very well be that AI assistance, both in coding and in research and many other ways, is far more important than the existence of an open protocol. It may even obviate the need for an open protocol because the LLM can reverse engineer whatever software the users are already using.
+Application handlers are not the only kind of recommendation event on Nostr by any stretch - recommendation events also exist for relays, Cashu mints, DVMs, and more.
 
-A latent possibility for this that has existed for decades is that most centralized platforms run in the browser and therefore have to present HTML and JavaScript, which even if obfuscated can still be understood with enough study. Users can today already make browser extensions that remove ads, hide content, add buttons, but very few people actually do, even among developers.
+As an aside, one problem with NIP 89 as it currently stands is that handler events have been re-purposed to advertise things other than client-type applications. By way of reminder, Data Vending Machines (DVMs) are service providers that use relays as transport brokers. While these can be thought of as "handling" certain event kinds, the way they do it is very different from how clients work.
 
-It could be that this is just a result of human nature and inertia, but I'm hopeful that the ease with which AI agents can be used to take advantage of these injection points will lead to increased prevalence of the hacker mentality among regular people.
+Because DVMs have their own reserved kinds this works okay in practice, but would have been much better as an alternative listing event. This migration could be a worthwhile backwards incompatible change to campaign for on the protocol, since it would clear up some confusion about what handling actually means.
 
-However, an open protocol can't hurt. An open protocol makes the entire database and identity layer hackable as well as the presentation layer.
+For example, if a user wants an application that can "handle" kind `5300` content recommendations, does that mean they want to send those kind of events from a given client? Or do they want to send those events to a particular service provider? This is a good illustration of why it's bad to overload kinds, and why creating new kinds for new use cases is almost always the right choice. And even if DVMs and application handlers were separated, there could still be some ambiguity, for example between publishing a given event kind and rendering it.
 
-Instead of simply being able to add a button, users can add much deeper integrations into the mechanisms behind the data flow through open source applications running on an open protocol modified through LLMs.
+The important thing to recognize about recommendation and handler events is that they make possible a social media _ecosystem_ incomparable to what has gone before.
 
-With the increasing saturation of human life with digital means, this hacker mentality is more important than ever to safeguard human freedom and maintain human agency.
+In a forest, trees trade sugars to fungi in exchange for minerals extracted from the soil. These wildly different life forms have a mutually beneficial relationship that results from the exchange of these resources. Likewise, Nostr clients and Nostr users benefit from the structured exchange of signed events and functionality.
 
-It's tempting to want to opt out of the internet entirely when we look at its effects. But the only way forward is through. And I strongly believe that cultivating the hacker mentality is the way forward.
+An "ecosystem" is a complex environment which life forms inhabit. A "media ecosystem" is a complex digital environment that humans inhabit. In this chapter, I have attempted to highlight the benefits of "radical openness" in protocol development. Top-down design reduces essential complexity, making a protocol easier to understand and implement. In contrast, an open protocol multiplies complexity by virtue of the many participants and their relatively free ability to interact with other users and modify implementations.
 
----
+An increase in complexity makes an environment harder to understand as a whole, but does not necessarily mean a loss of agency. If the appropriate affordances are provided to users to help them manage the complexity they encounter, their agency can be increased rather than diminished. This in turn allows them to determine their own role in the ongoing emergent complexity of the system, and adapt it to their own purposes.
 
-Given the radical openness of the Nostr protocol, some additional mechanisms are necessary in order to cope with the certainty of running into event kinds that implementations don't recognize.
-
-It's categorically impossible for clients to implement support for every Nostr data format because new data formats are created constantly.
-
-So what do you do when you run into an unknown event kind?
-
-Suppose a user embeds an event to a kind 30023 long form article in a kind one microblogging post and your client doesn't want to add render support for long form articles. How can you handle that event without knowing what it is?
-
-A few mechanisms have been proposed for dealing with this. I think they're not completely there yet. We could have more robust systems, but the beginnings are there. First of all is NIP-31, which proposes the inclusion of an alt tag on events, which describes, in human readable language, what the event is. And so, your client could look at the long form article, see an alt tag with the title of the article and an explanation of what that event actually is and display that to the user. This is something, but it's not very compelling. This is a dead end and all the user knows is that they aren't seeing content that they would like to see. There's no call to action for how to actually view the content unless a link is included in the alt tag.
-
-But that likewise would be centralizing because it would likely rely on a particular implementation.
-
-An additional problem with this is that it in practice conflates data with content. This alt tag, if it replaces the actual content of the article, might confuse users who might interpret it as being the actual content of the thing. It's important when designing UX to have visual signals that this isn't actually the content of the article.
-
-I think alt tags were a good attempt, but ultimately a bad idea.
-
-More sophisticated means are required for giving users a path forward when presented with unrecognized data.
-
-A simple error message would probably be an improvement over alt messages because it would demonstrate to the user that something is indeed missing or broken.
-
-Luckily we have an alternative in NIP-89 application handlers.
-
-NIP-89 builds affordances into the protocol that users can use as a path forward when presented with unknown data, and NIP-89 combines that solution with social graph traversal.
-
-NIP-89 combines this affordance with cryptographic identity by providing a kind 31989 recommendation event for kind 31990 application handlers.
-
-An application handler is a kind 31990 event which includes tags that include information that describe the application and its purpose as well as affordances for opening a given event or profile in that application.
-
-Application handlers also include a k-tag, which can be used to filter out handler events when looking for application handlers on the network.
-
-So in our scenario above, the microblogging client, when presented with a long form article, could ask the network for kind 31990s with a k tag matching 30023.
-
-This would return a bunch of application handlers with web, Android, iOS, or other handler tags. And the client can then present that to the user in order to give the user options for how they want to view the content.
-
-This allows implementations to reduce their scope to not implement features that they don't care about supporting, while at the same time improving the state of the network by advertising alternatives or complementary applications to their users. This is not something that a walled garden would ever want to do. Their impulse is always to verticalize or to vertically integrate their stack and eat every adjacent industry. On Nostr, because implementations can enjoy the network effect of the entire protocol without implementing the whole protocol, they can afford to recommend alternatives. And in fact, doing so makes their value proposition stronger, because users now have a myriad of alternatives to pick from. This is good user experience. If users are served, they will stay.
-
-NIP-89 enhances this ability to search for handlers even further by recognizing that anyone can publish a handler event and these handlers might not necessarily be trusted. Maybe they're trying to phish your users or advertise to them or maybe the application provides a poor UX even if it's well-intentioned.
-
-Kind 31989 recommendation events allow anyone to publish a signal about which clients they use to handle a particular kind. And so when prompting a user with an application handler list, clients are able to include social web of trust data that validates a given application handler. Maybe only one person that the user follows uses an application handler, or maybe a hundred people do.
-
-Clearly, the more popular app is more likely to provide the user with a good experience. However, the one recommendation might provide an interesting alternative to the popular app, thus eroding the hold that popular applications have on the network.
-
-This can help mitigate the concentration of power in a few popular implementations.
-
-Application handlers are not the only kind of recommendation event on Nostr by any stretch. Follows can be seen as recommendations loosely of other accounts. Recommendation events exist for relays in the form of reviews and Cashu mints in the form of various kinds.
-
-Unfortunately, data vending machines, which are essentially service providers that use relays as transport brokers, overloaded kind 31990 application handler events.
-
-Because DVMs have their own kinds that they handle, this works okay in practice, but would have been much better as an alternative listing event.
-
-This migration could be a worthwhile backwards incompatible change to campaign for on the protocol, because there's confusion about what handling actually means as long as both applications and service providers are using the same listing types.
-
-For example, if a user wants an application that can handle kind 5300 content recommendations, does that mean they want to send those kind of events from a given client or do they want to send those events to a particular service provider? This is a good illustration of why it's bad to overload kinds and why creating new kinds for new use cases is almost always the right choice.
-
-Even if DVMs and application handlers were separated out, there could still be some ambiguity. For example, between publishing and rendering certain kinds.
-
-These could be subdivided further, but the cost of backwards incompatibility in this case may not be worth starting from scratch. These kinds of decisions are things that individual developers and individual users can decide for themselves and campaign for through their use of their preferred patterns in the adversarial environment that is Nostr.
-
-The important thing to recognize about recommendation and handler events is that they make possible a social media ecosystem in a way incomparable to what has gone before.
-
-In a forest, trees trade sugars to fungi in exchange for minerals extracted from the soil. These wildly different life forms have a mutually beneficial relationship that results from the exchange of these resources.
-
-Likewise, Nostr clients and users can benefit from the structured exchange of signed events and functionality.
-
-An ecosystem is an environment in which life forms inhabit. The media ecosystem is a complex digital environment that humans inhabit.
-
-More complexity does not necessarily mean more alienation. If the correct affordances are provided to users, they can become able to intuitively navigate the complexity of the system to be meaningfully agential in a digital space.
-
-This vision represents a huge improvement over the status quo. Implementation is another story.
-
-But viewing implementations as an ecosystem surrounding and serving end users is an important and helpful frame for guiding their development.
-
+This is a truer form of "social media" than the sanitized, corporate marketing machines which seek to quantify relationships and extract value. If we "embrace the chaos" of the Nostr protocol, it can become much harder to quantify, let alone control, to the benefit of its users.
