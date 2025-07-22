@@ -1,4 +1,4 @@
-# Nostr Improvement Possibilities
+# Chapter 2: Events and Kinds
 
 Throughout this chapter I'm going to make mention of "NIPs", so I'd better begin by defining the term. "NIP" stands for "Nostr Improvement Possibility" - i.e., a specification related to nostr. These specs might define new content types, or new behaviors for relays, clients, or other related services.
 
@@ -10,7 +10,7 @@ Right now, the best place to collaborate is at https://github.com/nostr-protocol
 
 With that in mind, let's get into events - the "what" of Nostr.
 
-# A Single Data Type
+## A Single Data Type
 
 All data on Nostr, with very few exceptions, is contained in "events". Here's an example of an event:
 
@@ -41,7 +41,7 @@ Here's what those fields mean:
 
 The core of the event is the cryptographic properties: `id`, `pubkey`, and `sig`. These three properties make it possible to 1. verify the event author, and 2. refer to the event by content hash rather than location. We'll talk more about this later, but it's hard to understate just how important these properties are. For now though, I want to get into a different topic: data modeling.
 
-# Numbers, not Names
+## Numbers, not Names
 
 Every event has a "kind," which is a 16-bit integer. A kind is Nostr's equivalent of a "content type". In other words, an event's `kind` determines how that event should be interpreted. Using numbers instead of names is an unconventional choice, but it has certain benefits.
 
@@ -69,7 +69,7 @@ Likewise, some data makes sense to group together in a single event, for example
 
 There is a guideline listed in the nips repository, that "there should be no more than one way of doing the same thing." Because nostr is a social protocol, it depends on network effects, not just of users, but of standards. The more implementations that use a single kind, the more users are in turn able to interact. So when creating a new standard, check to see if there is an existing spec and follow it if at all possible. This might seem to contradict my advice to error on the side of proliferating data types, but it's important to understand that the "one way" rule is only an _ideal_, and can still be violated if design goals vary, or an existing spec is broken in some cricial way. Just be prepared to defend your divergence from convention if you want other people to migrate to the new way of doing things.
 
-# Timestamps are liars
+## Timestamps are liars
 
 There are an incredible number of [falsehoods programmers believe about time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). Dealing with time is inherently difficult, especially in a distributed system which has no single timestamping authority.
 
@@ -83,7 +83,7 @@ A possible solution to this is to use something like vector clocks where every p
 
 This is a good place to introduce a key part of the nostr design ethic: trust users, trust developers, and keep things simple. Protocol documents are often bloated with clarifications for every edge case, resulting in standards no one actually reads. Nostr specifications should be brief and to the point so that the most people possible can understand them and hack on the protocol.
 
-# Content and Tags
+## Content and Tags
 
 Finally, we have `content`, and `tags`. An event's content is generally a human-readable payload, while tags are structured data.
 
@@ -113,7 +113,7 @@ The benefit here is that new information about the event ID can be added associa
 
 This is the same trade-off as exists in programming languages when choosing named vs positional arguments (for example python's `*` construct). Named arguments make it a lot easier to maintain backwards compatibility as a function's signature evolves, and the same is true of nostr events.
 
-# Behavior and Data
+## Behavior and Data
 
 Tags can fall into one of three categories: data, filters, and behavior. These three things are often intermingled and hard to differentiate. This terminology is my own, and not reflected in any specifications or event structure, but I think it's useful for understanding how different design concerns interact.
 
@@ -152,7 +152,7 @@ This problem could have been solved by separating data, filter, and behavior tag
 
 When resolving the meaning of a tag, always first look at the specifications for the event's kind, which has the right (being the most specific spec) to override any general tag behavior. Only secondarily should you look at specifications that define tags in a broad sense.
 
-# Behavior and Data Part Deux
+## Behavior and Data Part Deux
 
 Another example of this data/behavior conflict is the idea of event kind ranges.
 
@@ -176,7 +176,7 @@ This all makes sense, but it has a major downside - it couples kind numbers with
 
 But I digress. We might get these extensions in the future, but for now we have to work with the limitations of kind ranges. My point is, when you're defining new event types, you should have a slight bias towards regular non-replaceable events, because they don't break referential transparency. But given that replaceable event support is nearly universal, it's okay to use replaceable events. It's definitely not a bad compromise.
 
-# Deleting Events
+## Deleting Events
 
 One final bit of behavior that's worth mentioning in this context is deletion requests. These are kind `5` events that can either `e` tag an event's ID or `a` tag an event's address. Relays receiving a kind `5` event are expected to delete all matching events - provided the author is the same.
 
@@ -184,7 +184,7 @@ It's important that these be considered deletion _requests_ specifically, not ac
 
 This is the thing about signed data. Once it's published, there's no way to unsign or unpublish the data. Anyone who has a copy can keep it. This is great for keeping public figures accountable for their words and actions, but not great for taking something down that shouldn't have been posted. Care has to be taken when using signed data. This is true of unsigned data as well, which can always be screenshotted or copied, but signatures remove deniability. This is a good trade-off for public broadcast social media, but it is something to keep in mind.
 
-# Filtering Events
+## Filtering Events
 
 Another concept that is closely related to events is that of filters, which are a data structure that allows clients to request specific events from relays. A filter is a dictionary with one or more of the following fields:
 
@@ -202,7 +202,7 @@ There are some other less common filter extensions which include:
 - An additional `search` property is defined by NIP 50 and implemented by some relays
 - Negative matches have been proposed, but rejected because of the impact they would have on relay performance
 
-# A Light Touch
+## A Light Touch
 
 Dealing with other people's signed events is always going to require some adversarial thinking. Events can be malformed, either from a buggy implementation or from an attacker trying to crash implementations. A `p` tag might have an invalid or missing value, or a relay hint that is trying to spy on users. Event `content` might include HTML injection attacks, or illegal content.
 
@@ -233,7 +233,7 @@ One way I've found to do this is to write parsers for an event in order to turn 
 
 This adds a certain amount of additional effort to implementations, but is very important for avoiding disruption of user experience.
 
-# Backwards Compatibility
+## Backwards Compatibility
 
 Backwards incompatibility is one of the big problems of spec design. When breaking backwards compatibility, not only do you break other existing implementations, but in a system where events can't be migrated to the new format you also break all historical data, even if it was published by your own app.
 

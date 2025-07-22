@@ -1,3 +1,5 @@
+# Chapter 6: Value for Value
+
 The native currency of the internet is not a form of money, but attention.
 
 Sure, there are plenty of places where money is paid for goods or services on the internet. But in large part, these payments are made not between users (who have very little money), but between businesses who have a lot of it, as well as the incentive to leverage that capital for increased revenue or market share growth.
@@ -14,7 +16,7 @@ The same is true in a digital goods context, for example, on streaming services.
 
 We pay for access to the internet with our time and attention, and we do it on their terms, not our own.
 
-# Money is Time
+## Money is Time
 
 In his talk entitled "You Wouldn't Zap a Car Crash," Gigi points out this quirk of language: that we _pay_ attention and _spend_ time. Money is a proxy for the time we have spent accumulating it. But on the internet, that relationship has been reversed. Our time has become a proxy for the money that platforms wish to accumulate.
 
@@ -36,7 +38,7 @@ If the internet were powered by microtransactions rather than attention parasiti
 
 Nostr makes this vision possible, at least on a technical level, through Bitcoin micropayments encoded into Nostr events known as "zaps".
 
-# Customers, Patrons, and Participants
+## Customers, Patrons, and Participants
 
 The idea of "value-for-value" has been around for quite a while, particularly in the podcasting 2.0 space, where listeners can stream satoshis to the podcast they're listening to in order to show appreciation for the content they're consuming. The idea is that because the payment is voluntary, it demonstrates that people are willing to compensate producers based on value received. But this is an inadequate understanding of what is actually going with this model.
 
@@ -72,7 +74,7 @@ We see this same limit on scale in the growth patterns of certain types of busin
 
 At the end of the day, it is possible to make a value for value model work - but it's important to understand the dynamics actually in play.
 
-# Zaps and Nutzaps
+## Zaps and Nutzaps
 
 With all that out of the way, let's get into the nuts and bolts of value-for-value micropayments on Nostr.
 

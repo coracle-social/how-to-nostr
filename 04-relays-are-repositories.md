@@ -1,6 +1,8 @@
+# Chapter 4: Relays are Repositories
+
 Thus far we've focused mostly on "Nostr as data." But data modeling, signatures, and identity are really only half of the story. Nostr is much more than a data format - what is much more interesting is its network architecture.
 
-# Why WebSockets
+## Why WebSockets
 
 Many cutting-edge decentralized protocols are "peer-to-peer," which means they attempt to repurpose the architecture of the internet to facilitate direct communication between peers. Peer-to-peer technology is really neat, but it's also hard to get right because it works against the grain of the internet as it has been used for the last 30 years. Things like NAT traversal make this especially difficult.
 
@@ -28,7 +30,7 @@ This technique was pioneered originally by Secure Scuttlebutt (SSB), which start
 
 In terms of transport protocol, Nostr opted for "easy" by default. But this dimension of the relay network is secondary to the network architecture itself, which adheres much more closely to Hickey's idea of "simplicity". So, setting aside the transport questions for now, let's get into what relays actually do.
 
-# Multi-Master
+## Multi-Master
 
 A key aspect of Nostr's architecture is its reliance on more than one relay for storing data. As we mentioned in the previous chapter, relays can't falsify anything because your data is signed. They don't have the ability to lock users in or create a data moat. What they do have, however, is the ability to censor or delete user data.
 
@@ -42,7 +44,7 @@ For the average social media user, three to five popular relays is generally eno
 
 This ignores the problem of which relays should be used to store what content. Solving this problem is the key to making Nostr's multi-master architecture work; naive replicas result in either excessive duplication of content across all relays, or persistent failure to locate content. We'll get to that soon, but first I want to define what a relay actually is.
 
-# Functional Relays
+## Functional Relays
 
 Relays are, in essence, repositories of events. They hold a bunch of events in some database or other and grant access to those events using the Nostr WebSocket protocol. This protocol involves sending JSON-encoded messages over WebSockets using just a few core commands:
 
@@ -77,7 +79,7 @@ One final thing to note in this context is [Negentropy](https://github.com/nostr
 
 This does a lot to facilitate content replication across relays without burning through resources, which in turn makes it possible for the network to re-organize itself to align with expections about where a given event "should" be stored.
 
-# Replication and Routing
+## Replication and Routing
 
 The Nostr network is highly partition tolerant, unlike (for example) Secure Scuttlebutt, which uses Merkle trees to connect all events from a single key together, making it impossible to download a single event without downloading all events that came before it. On Nostr, you can download any dataset you want, because events aren't tied together. The cost of this is that you never know if you have all the events; the benefit is that content can be replicated more intelligently across the network.
 
@@ -102,7 +104,7 @@ In order to solve this problem, we must have rules for:
 
 In the latter case there is less information available for solving the routing problem, which means multiple heuristics might be relevant for a given event, depending on how it might be queried.
 
-# The Outbox Model And Friends
+## The Outbox Model And Friends
 
 This is where the "Outbox Model" comes in. The Outbox model combines cryptographic identity with selective content replication, and was the first heuristic defined for solving the routing problem, but is certainly not the only one - other heuristics have emerged over time as the same problem cropped up in different contexts. At the end of this section, I'll enumerate several variations and their accompanying heuristics.
 
@@ -146,7 +148,7 @@ Which relay an event is posted to depends primarily on how that event is to be r
 
 In both cases, events belong somewhere that isn't currently well-defined by the protocol. The lack of a path from bootstrapping relays to content discovery is an flaw in the design of certain NIPs. Currently, this is solved by asking users to manually select the relays where they want to look for geocache listings or topics. This can be a perfectly valid heuristic on its own, but will necessarily result either in centralization (by clients who hard-code certain relays), or missed notes (since the ability to retrieve matching events depends on something between randomness and brute force). Additional signaling may be implemented to solve these problems, for example relays may advertise their support for certain `t` tags, or for geocache listings in a given region. In order for this to work though, the heuristics have to be defined and followed.
 
-# Bootstrapping
+## Bootstrapping
 
 One event kind that I've thus far avoided introducing a heuristic for is `kind 10002` relay selections. If these determine where the rest of a user's public notes live, what determines where they belong? This is the classic bootstrapping problem of networks, for which you need a heuristic of a different kind.
 
@@ -189,7 +191,7 @@ The downfall of all of this is to what extent developers are interested in suppo
 
 But that's why I'm writing this book. Decentralization is not easy - but it has massive payoffs if developers go to the trouble of building robust, principled implementations of the protocol.
 
-# Relay Hints
+## Relay Hints
 
 Something that frequently gets confused with heuristics for relay selection is relay hints. Relay hints are baked into certain events, particularly where there isn't sufficient information otherwise available for fetching a related event.
 
@@ -209,7 +211,7 @@ If this all seems very abstract, take a look at https://how-nostr-works.pages.de
 
 Properly implementing robust relay selections across the many heuristics, bootstrap mechanisms, and relay hints is obviously complex, and could be made simpler if re-designed from scratch. But solving this problem is essential to making Nostr censorship resistant, and because of the many different use cases that Nostr supports with its open data model an unlimited number of heuristics may be appropriate.
 
-# Content Migration
+## Content Migration
 
 There's one more wrinkle to relay selections which needs to be addressed before we're done here. What happens if the relays selected by a given heuristic change over time? This most commonly happens when a user changes his outbox relays, but it can occur for any other relay selection heuristic. Normally this problem is ignored or overlooked in implementations, but because nostr relays are not intended to be trusted either now or perpetually, having a story for how to manage this problem is an essential part of any complete implementation.
 
@@ -238,7 +240,7 @@ In terms of implementations, convenient tools will have to exist to do this on b
 
 In terms of the protocol, currently the only way to synchronize events to a new relay is to download all involved events and re-publish them manually, which can be fairly expensive in terms of bandwidth. A new primitive for asking a relay to synchronize certain relays from a peer would be a useful optimization. Similarly, there aren't currently any protocol affordances for requesting deletion of events - neither NIP 62 nor NIP 09 quite fit the bill, since they're more permanent.
 
-# Relays as Transport
+## Relays as Transport
 
 Earlier I defined relays as "a repository of events." This definition can be exploited to do some interesting things not originally intended though. Specifically, relays can be used as a form of transport broker.
 
@@ -250,7 +252,7 @@ Other examples are Nostr Wallet Connect, which allow for applications to communi
 
 For people less interested in the social media dimension of Nostr, this is Nostr's killer feature. Communication via relay allows anyone to set up a service identified only by a public key rather than an IP address. This is useful for protecting service providers' privacy, and makes running small services extremely convenient. Using this model, service providers can be run in any internet-connected software, without dealing with the complexity involved with NAT traversal. And of course, because relays are interchangeable in terms of protocol, multiple relays can be used at the same time to broker communication.
 
-# The Relays Pattern
+## The Relays Pattern
 
 Zooming out even further, relays are useful as a conceptual pattern that can be applied in the context of another protocol. In its simplest form, a relay independent of Nostr is just a server that implements a protocol, and which is advertised for selection by the end user on the Nostr network.
 
@@ -260,7 +262,7 @@ This allows for the same kind of heuristic used for relay selection to be applie
 
 Blossom applies the same pattern pioneered by Nostr of interchangeable protocol servers to media storage. Another example is Cashu Mints, which speak the Cashu protocol. This pattern is not unique to the Nostr protocol ecosystem either - Git, ActivityPub, FTP, XMPP, and many other internet protocols also follow this pattern. But Nostr is an exceptionally clear example of how useful this pattern is when used in conjunction with signed data.
 
-# Wrapping Up
+## Wrapping Up
 
 This was a long chapter, for which I apologize. But its length is appropriate because relays are the most important part of Nostr. Even more important, I would argue, than signed data. Both are necessary conditions for Nostr to work, but the network architecture is what is really novel compared with digital signatures, which have been around for 50 years and yet haven't gained widespread end-user adoption.
 

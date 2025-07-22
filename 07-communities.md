@@ -1,3 +1,5 @@
+# Chapter 7: Communities
+
 In 2020, Twitter surprised everyone by censoring several high-profile accounts. This directly contradicted the ethos they had carefully cultivated over the previous decade of being a place where news breaks and ideas can be discussed. When they started censoring political content to appease advertisers, they undermined this journalistic ethos in the same way that mainstream media has been for a long time.
 
 At Twitter's edges, there were some built-in access controls—for example, private accounts and blocking—but the main use case of the platform was to democratize the spread of information and ideas through publicly broadcasted data. Nostr's architecture is well-adapted to this use case, in that it optimizes for censorship resistance and easy distribution of content.
@@ -6,7 +8,7 @@ Access controls are similar in many ways to censorship, in that they limit the a
 
 I've covered the implications to user privacy of an open network elsewhere, but in this chapter I want to talk about access controls on Nostr from the perspective of digital communities. Communities have a different goal than broadcast social networks, which presents the problem of how (or whether) to adapt nostr to use cases that require access controls.
 
-# Communities are for People
+## Communities are for People
 
 Journalism is about information, facts, and opinions which can be objectified, analyzed, shared and remixed freely. Communities, on the other hand, are about people, whose identities are complex and dynamic, who have a personal experience of the world, are self-interested and responsible for their actions, are self-aware and self-reflective, who have beliefs, intentions, preferences, memory, and imagination.
 
@@ -26,7 +28,7 @@ Unfortunately, understanding the different types of communities (and how to serv
 
 Communities also exist in community with one another - to the extent that their members interact (or have membership in multiple communities), communities will be affected by each other. A community is therefore itself a higher-level organism which itself inhabits an ecosystem comprised of a whole complex of technologies, contexts, and individuals.
 
-# Digital Architecture
+## Digital Architecture
 
 The key thing to keep in mind when designing digital spaces for communities to inhabit is that the responsibility for healthy community functioning is ultimately up to the members and leaders in a given community, but design may be employed to support that functioning.
 
@@ -67,7 +69,7 @@ Below I will propose a few categories of community, and some ideas about how to 
 - Activity-oriented groups
 - Identity-oriented groups
 
-# Social Clusters
+## Social Clusters
 
 In their most organic form, communities exist only as emergent properties of individual relationships within an open network. Another term for this is "social clusters", which can be identified mathematically through graph analysis, or simply by gestalt.
 
@@ -82,7 +84,7 @@ The prominence of various members within a social cluster varies widely as well.
 
 This use case is served well by broadcast social media, but is simultaneously supported by smaller-scale forms of association which allow members to evolve the group identity without attracting undesired attention.
 
-# Group Chats
+## Group Chats
 
 At the other end of the spectrum are group chats. Group chats are a fairly well-defined type of community because in general their members are also well-defined. Many group chats are comprised of only two people, for example text message conversations or direct messages, but can scale to dozens, or even hundreds, of members.
 
@@ -104,7 +106,7 @@ For this reason, the medium of group chats simply cannot scale without a way to 
 
 For this reason, chat groups tend to be either ephemeral and practical, organized around some short-term need for coordination, or they are predicated on a high level of relational trust shared between all members of the group.
 
-# Discussion Forums
+## Discussion Forums
 
 Let's bounce back now to the other end of the spectrum. Just this side of "social cluster" type communities are "discussion forums".
 
@@ -140,7 +142,7 @@ But this is not how discussions grow. They start out informally, and unmoderated
 
 The discussion forum group type is not limited to forums or subreddits, but can be seen anywhere that open access is granted to participate without any prior relationship being established. For example, livestream chats, discord servers, or blog post comment sections. In any of these cases, the user can simply register, leave their comment, and never come back. Access control is only implemented when a participant breaks the rules or expectations of the discussion forum, whether by posting spam, harassing other users, or going off-topic.
 
-# Owned Communities
+## Owned Communities
 
 Next up we have "owned" communities, which are similar to but distinct from discussion forums. Discussion forums are predicated on some general topic that doesn't necessarily belong to any of the members, whereas owned communities are organized by, and for the sake of, some centralized entity.
 
@@ -156,7 +158,7 @@ To the extent that an entity is likely to be deplatformed by the third party the
 
 Because of the characteristics of owned communities, they don't benefit from a protocol optimized for decentralization per se. Although to the extent that they interoperate with other products using the same protocol, they may be able to provide a superior value proposition in the form of cryptographic identity support, signed data, and protocol-native content types.
 
-# Commons
+## Commons
 
 Finally, we have a type of community which I'm calling a "commons". This may not be the best name for it, but the idea is that this type of community is "owned" in common by its members. These groups may form for any of the reasons that characterize the other community types I've mentioned, but in contrast to "owned" communities implement self-organization through political means.
 
@@ -172,7 +174,7 @@ But in a commons-type community, the roles that a given member takes on are espe
 
 Whatever the organizing principle chosen by the community, the digital spaces it inhabits should accommodate it rather than impose its own structure upon it. As a result, commons type communities are a very large, and very difficult, design space. They can be supported by chat applications or by owned group models, or even by digital spaces originally intended for discussion groups or broadcast social media. But the selection or construction of a digital space must be carried out in close partnership with the actual members of the community.
 
-# Roles and Spaces
+## Roles and Spaces
 
 In the vast majority of communities (not just commons-type communities), membership is not binary, but exists on a spectrum. This is obvious in terms of moderation and administration. If not all members are moderators, some members have a role which grants them privileges not accorded to the other members of the group.
 
@@ -206,7 +208,7 @@ If, for example, a community includes an AI search tool in order to ask the comm
 
 This social engagement creates real interdependence and mutual understanding and is easily displaced by software solutions like knowledge bases, AI agents, and frequently asked questions. These tools aren't without utility, but are easily misused. The discipline of design is essential to the task of designing community spaces.
 
-# Managing Complexity
+## Managing Complexity
 
 In every community scenario, there is significant complexity involved in implementation. Different group protocols on Nostr have attempted to manage this complexity in different ways.
 
@@ -226,7 +228,7 @@ Trusted servers can also implement any policy encrypted groups can, including fo
 
 At the same time, almost anything a server can be automated within the scope of an encrypted group. For example, if group access is granted or revoked based on the status of a member's subscription (in the case of a paid group), a program acting on behalf of a group moderator can implement whatever policy is needed. So while encrypted protocols may be more rigid and require more careful design than server policies, they are almost certainly a more robust solution over the longer term.
 
-# Interface Complexity
+## Interface Complexity
 
 Even in the case of server-enforced policy, clients can't be entirely passive. At the very least, the different partitioning schemes I enumerated earlier has to be supported by the interface that clients expose. However, different clients may provide a different interface to the same groups. An interesting question here is whether a diversity of interfaces makes digital spaces more or less habitable.
 

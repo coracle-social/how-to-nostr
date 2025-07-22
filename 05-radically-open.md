@@ -1,3 +1,5 @@
+# Chapter 5: Radically Open
+
 All protocols exist on a spectrom between open and closed.
 
 Open protocols invite anyone to participate and build; closed protocols reserve participation to a select few. Closed protocols don't have a published specfication, don't have publicly available source code that can be used to reverse engineer the it, and can only be used by authorized developers. Access might be restricted by law, obscurity, complexity, or secrecy. Some closed protocols even lock things down with cryptography using techniques like DRM or VIN locking.
@@ -30,7 +32,7 @@ There is an important qualification to this though. One application with no user
 
 Every protocol feature exists on a spectrum between zero and universal adoption. Because the entire point of a protocol is to standardize something between implementations, this means that the extent to which a given standard is adopted determines how much a part of "the protocol" it is.
 
-# Politics and Protocol
+## Politics and Protocol
 
 Efforts to standardize the Nostr Protocol are more akin to discovery than invention. There is a massive design space for the Nostr Protocol, and it's individual developers who explore that design space to find new solutions to problems. The people that document those solutions are only recording what has been built in the wild. This book is a good example; in it I offer a fair amount of prescriptive advice - but it's up to you to decide whether to follow it.
 
@@ -63,7 +65,7 @@ Luckily, incentives work in our favor because interoperability is the key value 
 
 This criteria also helps reduce scope, since a lot of things don't need to be interoperable. For example, mobile push notifications are cryptographically tied to a particular app, which means there's no real point in including them - systems can't talk to each other anyway.
 
-# Thinking in Public
+## Thinking in Public
 
 One thing that has obscured the actual dynamics of Nostr's protocol development is the use of the NIPs repo for speculative proposals as well as for documentation of existing work.
 
@@ -81,7 +83,7 @@ But this is all by design. And I won't say that there aren't large existential r
 
 In fact, most successful protocols are more or less like this. Protocols (and software) designed in a top-down manner frequently end up failing to live up to their design goals. It's only through implementation that what is actually needed can be understood, and it's only through implementation that multiple implementations can exist to interoperate in the first place. Nostr takes the implementation-first approach to an extreme.
 
-# Backwards Compatiblity
+## Backwards Compatiblity
 
 Prioritizing implementations doesn't mean that the process of design, review, and feedback is not necessary though. In Nostr's openness and "shoot first ask questions later" environment, a lot of discussion and review still happens, just well after protocol features become "official." Just because something is in the NIPs repo doesn't make it sacred.
 
@@ -111,7 +113,7 @@ One thing to keep in mind, however, is that this kind of adversarial action can 
 
 Forks are a fact of life in the context of an adversarial system. Any actor can choose to fork at any time, for any reason. Even if some forks are well-intentioned and constructive, others may not be. For this reason, implementers must always be prepared to defend their version of the protocol both technically (through defensive coding) and politically (by educating users about the fork and persuading other developers of their view). Core protocol features will gain momentum over time, contributing to stability, but there will always be a certain amount of chaos at the edges. This chaos is a necessary consequence of a radically open protocol.
 
-# Hackability
+## Hackability
 
 I've been talking a lot about what interoperability is and how to support it, but I haven't really mentioned what exactly interoperability is for. What good is it for multiple implementations to be able to talk to each other?
 
@@ -143,7 +145,7 @@ It could very well be that AI assistance, both in coding and in research and man
 
 It's also possible that human nature and our willingness to put up with incredible levels of inconvenience will leave this opportunity untapped. The relative lack of adoption even simple things like browser extensions has seen is evidence of our natural inclination to be slaves to our technology. But it's possible AI agents may lead to the spread of something akin to the "hacker mentality" even among non-technical users - not because they make hacking "easy", but by unlocking the universal language of computing for use by non-specialists.
 
-# Application Ecosystems
+## Application Ecosystems
 
 Given the radical openness of the Nostr protocol, some additional mechanisms are necessary in order to cope with the certainty of running into event kinds that implementations don't recognize. It's categorically impossible for clients to implement support for every Nostr data format because new formats are created constantly. Implementations have to have a strategy for dealing with events they don't understand.
 

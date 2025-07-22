@@ -1,4 +1,6 @@
-# NIP Repositories
+# Appendix B: Resources
+
+## NIP Repositories
 
 As discussed in chapter 5, many Nostr developers have opted to self-publish specifications for protocol extensions. Below is a list of alternative NIP repositories which may contradict or supplement the original repository hosted on github at https://github.com/nostr-protocol/nips.
 
@@ -12,14 +14,14 @@ As discussed in chapter 5, many Nostr developers have opted to self-publish spec
 
 Also see [this discussion](https://github.com/nostr-protocol/nips/pull/1214) about third-party NIPs. If any sources of specs are missing from this document, please contact me so I can add them.
 
-# Protocol development
+## Protocol development
 
 Many protocol features exist in the wild without documentation. Below are some resources that can help with designing or discussing protocol features.
 
 - [NostrHub](https://nostrhub.io/apps) surfaces custom NIPs including comment sections and forking.
 - [Undocumented Nostr Kinds](https://undocumented.nostrkinds.info/) - a registry of nostr event kinds found in the wild without known documentation.
 
-# App lists
+## App lists
 
 There are hundreds of nostr apps - so many that it would be a full time job to track and categorize them. Many are defunct, or incomplete. See below for different resources for finding high-quality Nostr applications.
 

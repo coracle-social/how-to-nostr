@@ -1,4 +1,4 @@
-# Alternatives to Nostr
+# Appendix A: Alternatives to Nostr
 
 I hope that over the course of this book I have made it clear that Nostr is a unique and compelling solution to the decentralization of social media. But at the same time, it has numerous flaws and trade-offs that make it difficult for developers to use and leave it open to attacks on the protocol.
 

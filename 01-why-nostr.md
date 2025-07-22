@@ -1,7 +1,5 @@
 # Chapter 1: Introduction to Nostr
 
-## What is Nostr?
-
 Nostr stands for "Notes and Other Stuff Transmitted by Relays." It was created as an answer to social media censorship by big tech companies, but has since become much more. Over time, "notes" have become less consequential and the "other stuff" more important.
 
 Nostr is an open protocol, which means anyone can build on it and anyone can extend it. It relies on digital signatures for data authentication and self-hosted or otherwise user-aligned infrastructure for hosting.
