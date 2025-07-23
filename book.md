@@ -12,37 +12,15 @@ This book is for builders — for people who are excited about decentralization 
 
 This book will cover some of the basics in passing, but primarily as a stepping stone to explaining a paradigm for how to use the protocol effectively. For a more technical overview of the protocol itself, take a look at [NostrBook](https://nostrbook.dev/).
 
+Like Nostr itself, this book is not a comprehensive guide for how Nostr works (or ought to work). It is only a set of opinions, ideas, and guidelines for people who wish to create software for themselves or others — software that enriches its users rather than exploiting them.
+
 # 1. Complex Problems, Simple Solutions
 
-To begin, I want to present a quick survey of how Nostr works at a high level, as well as a short explanation for why internet censorship is a problem, the values that are built into Nostr's architecture, and what sort of solution Nostr actually is.
-
-Nostr is in many ways a "dumb" solution to a complex problem. Incentives, structures of power, and technological ecosystems are irreducibly complex, and impossible to understand in detail. But there are key architectural patterns that the modern internet is built on which enable and promote its particular dysfunctions — most importantly, the centrality of servers for both data storage and authentication. Nostr leverages digital signatures and cryptographic identity in order reduce the role of servers from powerful hubs to disposable, user-aligned repositories.
-
-Public key cryptography has been around for around 50 years at this point, but its adoption by individuals remains idiosyncratic. Instead, individual users delegate their security to corporate entities which safeguard their keys for them. This falls far short of the dreams of the pioneers of cryptography — in the famous 1977 RSA paper (one of the first descriptions of public key cryptography), the authors present an optimistic picture of the future:
-
-> The era of “electronic mail” may soon be upon us; we must ensure that two important properties of the current “paper mail” system are preserved: (a) messages are private, and (b) messages can be signed. We demonstrate in this paper how to build these capabilities into an electronic mail system.
-
-The recovery of this vision is necessary in order to reform the internet to make it work for individuals, not just corporations with the infrastructure in place to manage keys. Instead of using server-based authentication, Nostr uses public/private key pairs to identify users. Users are able to unilaterally generate and use any number of cryptographic identities to create digital signatures of content. These signatures are then embedded in data structures called "events", alongside the user's public key, the event's hash, and some other information.
-
-Nostr data modeling is fairly unconventional. Instead of human-readable names and use-case-specific data structures, everything on Nostr is an "event". Different content types are distinguished by "kind," which determines how the event should be interpreted. For example, a `kind 3` event is a list of people that you follow on social media. A `kind 30023` event is a blog post. A `kind 9` event is a chat message, and so on.
-
-Users can also use their key pairs to encrypt or decrypt data, either for themselves or for other people on the protocol.
-
-Once created, events are then transmitted to other people, primarily via "relays," which are simple WebSocket servers, although they can also be sent over Bluetooth, emailed as attachments, or even written down and sent by carrier pigeon. The relay protocol is very simple, dealing almost exclusively with sending, receiving, rejecting, and requesting events. This makes it possible to create multiple interoperable implementations.
-
-The content types (or "kinds") the protocol describes are very loosely coupled, allowing a wide range of applications (or "clients") to be built that can talk to each other. Not every client needs to implement the entire protocol though — Nostr is ideal for building small apps that do one thing, and which don't have switching costs.
-
-Here's an example of what this architecture makes possible: Imagine following someone on your microblogging platform of choice, then opening your blog reader and all of their posts are already there. You highlight some text and type a comment. Later, you go back to your microblogging platform and read replies to the comment you made — written by people who follow you in dozens of other apps.
-
-In many ways, Nostr has the potential to be an upgrade to the entire internet. By decoupling data storage (relays), identity (keys), and functionality (clients), it becomes much easier to compose whatever pieces you might need in new and interesting ways. That's a big claim, and there are definitely some things that Nostr *can't* do well.
-
-In terms of the CAP theorem, Nostr has no consistency guarantees, but plenty of availability and partition tolerance. Nostr is essentially a distributed database which allows every node to operate independently without any coordination. By copying the same (signed) data to multiple relays, it will always be available even if some nodes go offline or ban the author.
-
-To recap: Nostr combines cryptographic identities, interoperable data storage, and an open ecosystem of content types to create a system where neither user identity nor user data can be captured by a single entity.
+To begin with, I want to present a summary of how the profit motive of internet businesses creates a system of incentives which drives censorship and surveillance capitalism, hurting users and undermining corporations' own value propositions. Next, I'll describe what sort of solution Nostr actually is, and end with quick survey of how Nostr works at a high level — just so we're all on the same page. 
 
 ## The Economics of Censorship
 
-I mentioned earlier that Nostr was designed to be "censorship-resistant". This is a negative way of saying that Nostr is designed to promote the digital freedoms of users — things like privacy, access to information, anonymity, freedom of association, and [credible exit](https://newsletter.squishy.computer/p/credible-exit). Because of how cryptography was adopted (primarily by institutions) in the early days, the internet is no longer aligned with the interests of its users, but has largely been captured by "platforms".
+Nostr was originally designed to be "censorship-resistant". But this is only one part of a bigger vision. Nostr is designed to *promote the digital freedoms of users* — things like privacy, access to information, anonymity, freedom of association, and [credible exit](https://newsletter.squishy.computer/p/credible-exit). Because of how cryptography was adopted (primarily by institutions) in the early days, the internet is no longer aligned with the interests of its users, but has largely been captured by "platforms".
 
 As a result, we have a state of rent-seeking in which the users who contribute all the value that the internet has to offer are exploited, undermined, manipulated, deceived, and sold by the custodians of that value. This is a far cry from the humanitarian dream of the early internet. [In the words of Tim Berners-Lee](https://www.scientificamerican.com/article/long-live-the-web/),
 
@@ -80,21 +58,45 @@ This slide isn't inevitable. But it's also human nature — everyone wants somet
 
 This problem needs more than a technical solution — politics, culture, community, and capital all have roles to play here. Nostr's role is to offer tools that individuals can use according to their own values, and for their own interests. Nostr makes it possible for internet users to preserve their own digital sovereignty and hold tech platforms accountable.
 
-My personal hope for Nostr is that it will aid in the restoration and cultivation of human flourishing and agency in a world increasingly mediated by digital technology. Nostr does not solve every problem. The ones it does solve, it often solves poorly. It is not a panacea, it is a toolset that can be applied to our benefit or to our detriment, but which has certain intrinsic qualities that the internet desperately needs right now.
+My personal hope for Nostr is that it will aid in the restoration and cultivation of human flourishing and agency in a world increasingly mediated by digital technology. Nostr does not solve every problem. The ones it does solve, it sometimes solves poorly. Nostr is not a panacea, it is a toolset that can be applied to our benefit or to our detriment, but which has certain intrinsic qualities that the internet desperately needs right now.
 
 I want to emphasize that it is only *through people* that any of the internet's ills can be cured. Nostr is not a comprehensive system for restraining digital evil (such a thing would be itself totalitarian), but a way of allowing individual and community agency to be exercised in solving problems germane to individuals' and communities' own particular circumstances.
 
-Like Nostr itself, this book is not a comprehensive guide for how Nostr works (or ought to work). It is only a set of opinions, ideas, and guidelines for people who wish to create software for themselves or others — software that enriches its users rather than exploiting them.
+## A Simple Protocol
+
+Nostr is in many ways a "dumb" solution to a complex problem. Incentives, structures of power, and technological ecosystems are irreducibly complex, and impossible to understand in detail. But there are key architectural patterns that the modern internet is built on which enable and promote its particular dysfunctions — most importantly, the centrality of servers for both data storage and authentication. 
+
+Instead of using server-based authentication, Nostr leverages cryptography in order reduce the role of servers from powerful hubs to disposable, user-aligned repositories. To join the Nostr network, all a user has to do is unilaterally generate a `secp256k1` cryptographic key pair.
+
+Any number of these cryptographic identities can be used in parallel for whatever purpose — whether to partition user data, create pseudonyms, or to encrypt data. Most importantly, key pairs can be used to create digital signatures of content, which are then embedded in data structures called "events" alongside the user's public key, the event's hash, and some other information.
+
+Once created, events are then transmitted to other people, primarily via "relays," which are simple WebSocket servers, although they can also be sent over Bluetooth, emailed as attachments, or even written down and sent by carrier pigeon. The relay protocol is very simple, dealing almost exclusively with sending, receiving, rejecting, and requesting events. This makes it possible to create multiple interoperable implementations.
+
+The content types (or "kinds") the protocol describes are very loosely coupled, allowing a wide range of applications (or "clients") to be built that can talk to each other. Not every client needs to implement the entire protocol though — Nostr is ideal for building small apps that do one thing, and which don't have switching costs.
+
+Here's an example of what this architecture makes possible: Imagine following someone on your microblogging platform of choice, then opening your blog reader and all of their posts are already there. You highlight some text and type a comment. Later, you go back to your microblogging platform and read replies to the comment you made — written by people who follow you in dozens of other apps.
+
+In many ways, Nostr has the potential to be an upgrade to the entire internet. By decoupling data storage (relays), identity (keys), and functionality (clients), it becomes much easier to compose whatever pieces you might need in new and interesting ways. That's a big claim, and there are definitely some things that Nostr *can't* do well.
+
+In terms of the CAP theorem, Nostr has no consistency guarantees, but plenty of availability and partition tolerance. Nostr is essentially a distributed database which allows every node to operate independently without any coordination. By copying the same (signed) data to multiple relays, it will always be available even if some nodes go offline or ban the author.
+
+To recap: Nostr combines cryptographic identities, interoperable data storage, and an open ecosystem of content types to create a system where neither user identity nor user data can be captured by a single entity. This subverts the central role that servers have in the modern internet, placing users at the center, rather than corporations.
 
 # 2. Events and Kinds
 
-The term "NIP" stands for "Nostr Improvement Possibility", a term the community uses to refer to Nostr protocol specifications. These specs might describe content types, behavior for relays, expectations for clients, or sub-protocols for other related services like signers, wallets, and "data vending machines" (services which perform arbitrary computation and expose an event-based interface).
+The term "NIP" stands for "Nostr Implementation Possibility", a term the community uses to refer to Nostr protocol specifications. These specs might describe content types, behavior for relays, expectations for clients, or sub-protocols for other related services like signers, wallets, and "data vending machines" (services which perform arbitrary computation and expose an event-based interface).
+
+When writing Nostr specifications, keep in mind that a key part of the Nostr design ethic is: *trust users, trust developers, and keep things simple*.
+
+Protocol documents are often bloated with clarifications for every edge case, resulting in standards no one actually reads. Nostr specifications should be brief and to the point so that regular people (rather than spec wonks) can understand them and hack on the protocol. Again, in the words of [Dave Winer](https://this.how/standards/):
+
+> I write for people who have brains, like to think, are educated, care about interop. I understand that people reading specs are not computers.
 
 Because nostr is open, anyone can write a spec and publish it anywhere they want. Unfortunately, this also means that there's no comprehensive list of specs anywhere.
 
 While Nostr is about as anarchic a protocol as you can get, there remains an irreducible political component to protocol design. Software cannot be interoperable if communication doesn't exist. Now, this communication might simply take the form of reverse-engineering other people's events and code, but communication is (obviously) improved through the use of language.
 
-Right now, the best place to collaborate is on the [github repository](https://github.com/nostr-protocol/nips). This is a carefully curated collection of Nostr specs, and the place the most Nostr developers participate. There has been some work towards creating a solution that exists purely on Nostr where we can get permissionless participation, a comprehensive list of specs, and a system for consensus. The closest thing we have so far is [NostrHub](https://nostrhub.io/), but it leaves some things to be desired.
+Right now, the best place to collaborate is on the [github repository](https://github.com/nostr-protocol/nips). This is a carefully curated collection of Nostr specs, and the place the most Nostr developers participate (open pull requests are a great place to get feedback and signal support for emerging specifications). There has been some work towards creating a solution that exists purely on Nostr where we can get permissionless participation, a comprehensive list of specs, and a system for consensus, but so far a complete solution hasn't really emerged.
 
 With that in mind, let's get into events — the "what" of Nostr.
 
@@ -127,23 +129,25 @@ Here's what those fields mean:
 - `content` is a (usually) human-readable representation of the event for display
 - `sig` is a `secp256k1` cryptographic signature of the event `id`
 
-The core of the event is the cryptographic properties: `id`, `pubkey`, and `sig`. These three properties make it possible to verify the event author, and refer to the event by content hash rather than location. We'll talk more about this later, but it's hard to understate just how important these properties are. For now though, I want to get into a different topic: data modeling.
+The core of the event is the cryptographic properties: `id`, `pubkey`, and `sig`. These three properties make it possible to verify the event author, and refer to the event by content hash rather than location. We'll talk more about how to work with cryptographic identities later, but it's hard to understate just how important these properties are. For now though, I want to get into a different topic: data modeling.
 
 ## Numbers, not Names
 
-Every event has a "kind," which is a 16-bit integer. A kind is Nostr's name for a "content type". In other words, an event's `kind` determines what that event means and how it should be interpreted. Using numbers instead of names is an unconventional choice, but it has certain benefits.
+Every event has a "kind," which is a 16-bit integer. An event's `kind` determines what that event means (it's "content type") and how it should be interpreted. Using numbers instead of names is an unconventional choice, but it has certain benefits.
 
 In a distributed system built on signed data, names can't change. Once you choose a particular term, you're stuck with it forever. The nice thing about integers is that they're meaningless, which allows for any number of subjective interpretations of a single standard, while keeping its meaning intact.
 
-Names have a weakness, in that they import meaning with them into any new context. This meaning might vary from person to person, or the person who chose the name might have made a poor choice. This results in confusion about the purpose and semantics of a given data type. [In the words of Dave Winer](https://this.how/standards/):
+Names have a weakness, in that they import meaning with them into any new context. This meaning might vary from person to person, or the person who chose the name might have made a poor choice. This results in confusion about the purpose and semantics of a given data type.
+
+Numbers carry no meaning (except in a memetic sense, like how Nostr uses `kind 1984` for content reporting). This frees up every implementer to assign their own term to an event based on their understanding of it. If their understanding of the content type changes, they can change the term they're using for it without affecting its actual meaning. This allows linguistic conventions to develop independently of the technical characteristics of a thing.
+
+Here's how [Dave Winer](https://this.how/standards/) explains this approach to naming things:
 
 > I once led a standards discussion beginning with this rule: We always had to come up with the worst possible name for every element. That way when someone said "I think foo is better" (and they did) we could all laugh and say that's exactly why we won't use it.
 
 > It totally doesn't matter what we call it. We can learn to use anything. There are more important things to spend time on.
 
 > Think of people whose first language isn't English. To them the names we choose are symbols, they don't connote anything.
-
-Numbers carry no meaning (except in a memetic sense, like how Nostr uses `kind 1984` for content reporting). This frees up every implementer to assign their own term to an event based on their understanding of it. If their understanding of the content type changes, they can change the term they're using for it without affecting its actual meaning. This allows linguistic conventions to develop independently of the technical characteristics of a thing.
 
 An alternative approach to creating collision-proof names is that of "reverse domain notation." This is a great way to create an identifier that does not collide with anyone else's, but (apart from having the same semantic difficulties as unqualified names) it also implies some level of ownership of a given content type.
 
@@ -153,49 +157,45 @@ This is very different from how we usually think about protocols. Normally, prot
 
 This is the same way that natural language works. Usage evolves over time, resulting in a mess of neologisms, malapropisms, idioms, and ambiguities. Dictionaries were invented only as a way of understanding language as it already exists. The Oxford English Dictionary includes not only definitions, but also the history and etymology of words, defined by actual use.
 
-The same word might vary from place to place. You might have the same word with different meanings in different places. Language is organic and very difficult to systematize. Nostr embraces this ambiguity, which is admittedly a risky choice, since we don't know if software-mediated language can evolve in the same way as human-to-human language.
+The same word might vary from place to place. You might have the same word with different meanings in different places. Language is organic and very difficult to systematize. Nostr embraces this ambiguity — which is admittedly a risky choice, since we don't know if software-mediated language can evolve in the same way as human-to-human language.
 
-But because of this design choice, Nostr is essentially a humble protocol - no more than an empty shell which users can then fill.
+But because of this design choice, Nostr is a very humble protocol - it is little more than an empty shell which users can then fill with content types that solve their use cases.
 
 ## More Kinds, Less Ambiguity
 
 This isn't to say that there aren't conventions that should be followed when designing new content types.
 
-In [Structure and Interpretation of Computer programs](https://web.mit.edu/6.001/6.037/sicp.pdf), Alan Perlis claims:
+In [Structure and Interpretation of Computer programs](https://web.mit.edu/6.001/6.037/sicp.pdf), Alan Perlis famously claimed:
 
 > It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.
 
-Nostr abides by this rule to the extent that implementations prioritize interoperability over functionality.
-
-This is a corollary to this, which at first glance might seem contradictory, but which reinforces the ability to deal unambiguously with a given data structure: don't pretend different data structures are the same thing. We see this mistake in JavaScript, where Arrays are actually a special type of Object. This is not what Perlis meant.
-
-To apply this to Nostr, If there are two use cases that are very similar but differ in minor ways, it's almost always a better choice to split it into multiple kinds. For example, [NIP 52](https://github.com/nostr-protocol/nips/blob/master/52.md) uses separate kinds for time-based and date-based events. This not only reduces ambiguity, but also allows clients to work more easily with one or the other or both content types.
-
-Some data does make sense to group together in a single event, for example kind `0` profile metadata. But the more data is attached to a single event, the more contention there will be over writing to that event, and the more conflicts become possible. If I had to redesign profile metadata today, I would create separate events for user name, profile picture, bio, lightning address, nostr address, and every other field on the event. This would be marginally more data for clients to download, but it would prevent data loss in the event of incomplete synchronization.
-
-There is a guideline listed in the nips repository, that "there should be no more than one way of doing the same thing." Because nostr is a social protocol, it depends on network effects, not just of users, but of standards. The more implementations that use a single kind, the more users are in turn able to interact. So when creating a new standard, check to see if there is an existing spec and follow it if at all possible.  [Dave Winer again](https://this.how/standards/):
+Because nostr is a social protocol, it depends on network effects, not just of users, but of standards. The more implementations that use a single kind, the more users are in turn able to interact. So when creating a new standard, check to see if there is an existing spec and follow it if at all possible. [Dave Winer again](https://this.how/standards/):
 
 > If you want to add a feature to a format, first carefully study the existing format and namespaces to be sure what you're doing hasn't already been done. If it has, use the original version. This is how you maximize interop.
 
-This might seem to contradict my advice to error on the side of proliferating data types, but it's important to understand that the "one way" rule is only an *ideal*, and can still be violated if design goals vary, or an existing spec is broken in some crucial way. Just be prepared to defend your divergence from convention if you want other people to migrate to the new way of doing things.
+Nostr abides by this rule to the extent that implementations prioritize interoperability over functionality. As the NIPs repo stipulates, "there should be no more than one way of doing the same thing". Fewer data formats means less complexity, and greater interoperability.
+
+This is a corollary to this, which at first glance might seem contradictory, but which reinforces the ability to deal unambiguously with a given data structure: don't pretend different data structures are the same thing. We see this mistake in JavaScript, where Arrays are actually a special type of Object. This is not what Perlis meant.
+
+To apply this to Nostr, if there are two approaches to the same problem that are equally valid, use the one that has the most adoption. At the same time, if there are two use cases that are very similar but differ in minor ways, it's almost always a better choice to split it into multiple kinds. For example, [NIP 52](https://github.com/nostr-protocol/nips/blob/master/52.md) uses separate kinds for time-based and date-based events. This not only reduces ambiguity, but also allows clients to work more easily with one or the other content type.
+
+Some data might make sense to group together in a single event, for example kind `0` profile metadata. But the more data is attached to a single event, the more contention there will be over writing to that event, and the more conflicts become possible. If I had to redesign profile metadata today, I would create separate events for user name, profile picture, bio, lightning address, nostr address, and every other field on the event. This would be marginally more data for clients to download, but it would prevent data loss in the event of incomplete synchronization.
+
+When choosing whether to create a new kind or adopt an existing one, it's important to understand that the "one way" rule is only an *ideal*, and can still be violated if design goals vary, or an existing spec is broken in some crucial way. Just be prepared to defend your divergence from convention if you want other people to migrate to the new way of doing things.
 
 ## Time is Hard
 
 There are an incredible number of [falsehoods programmers believe about time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). Dealing with time is inherently difficult, especially in a distributed system which has no single time-stamping authority.
 
-For this reason, Nostr's core protocol entirely punts on the problem — the `created_at` timestamp on events is supplied by the user, who can falsify the timestamp with no real constraints.
+For this reason, Nostr's core protocol entirely punts on the problem — the `created_at` timestamp on events is supplied unilaterally by the event author, who can falsify the timestamp with no real constraints.
 
 There are certain mitigations for this, for example [NIP 03](https://github.com/nostr-protocol/nips/blob/master/03.md) allows for the use of [Open Timestamp Attestations](https://opentimestamps.org/) to prove an event was published after a certain point in time. In general though, Nostr chooses to solve this problem by moving it from the technical to the social layer. In other words, if you don't trust someone to be honest about their timestamps, why are you reading their content anyway? Reputation is key in social media, and provides a natural solution to many technical problems.
 
 Nostr leans into this further by only supporting second-granularity timestamps. This is consistent with the very simple, human-oriented approach to social media that Nostr aims for. On a human time scale, sub-second granularity rarely matters. The temptation with millisecond granularity is that you might expect to be able to reliably sort events, but in a distributed system, that's not actually possible without centralized coordination. Clock skew across different computers is commonly more than one second, so messages may show up out of order even with millisecond-granularity timestamps.
 
-A possible solution to this is to use something like vector clocks where every piece of data increments a counter, or to build linked-list style data structures where every event refers to a previous piece of data in the chain. By default, Nostr does not specify a mechanism for ordering, which allows for natural solutions to emerge for each individual use case. Some content types form a natural tree structure, others explicitly provide affordances for enforcing order.
+A possible solution to this is to use something like vector clocks where every piece of data increments a conflict-free counter, or to build linked-list style data structures where every event refers to a previous piece of data in the chain. By default, Nostr does not specify a mechanism for this, which allows for natural solutions to emerge for each individual use case. Some content types form a natural tree structure, others explicitly provide affordances for enforcing order.
 
-This is a good place to introduce a key part of the nostr design ethic: *trust users, trust developers, and keep things simple*.
-
-Protocol documents are often bloated with clarifications for every edge case, resulting in standards no one actually reads. Nostr specifications should be brief and to the point so that the most people possible can understand them and hack on the protocol. Again, in the words of [Dave Winer](https://this.how/standards/):
-
-> I write for people who have brains, like to think, are educated, care about interop. I understand that people reading specs are not computers.
+Dealing with time in a distributed system is frequently use-case dependent. By providing a very weak mechanism for working with time, Nostr leaves the door open to use-case-specific strategies for working with time.
 
 ## Content and Tags
 
@@ -203,11 +203,11 @@ Finally, we have `content`, and `tags`. An event's content is generally a human-
 
 In reality, content isn't always human-readable. There are several event kinds that encode JSON or encrypted data into the content field. That pattern should be seen as an exception — this precedent was set early in the protocol when conventions for designing events weren't well established. Data should generally go in the tags array, and human-readable information should go in the content field.
 
-You might be wondering why tags is a list of lists, rather than an associative data structure. The advantage of lists of lists structure is 1. you can include the same key twice, and 2. tags preserve order. You see similar data types with ordered dictionaries in Python, and URL query parameters. This allows for more flexible data modeling than simple dictionaries would provide.
+You might be wondering why tags is a list of lists, rather than an associative data structure. The advantage of a nested lists data structure is 1. you can include the same key twice, and 2. tags preserve order. You see similar data types with ordered dictionaries in Python, and URL query parameters. This allows for more flexible data modeling than simple dictionaries would provide.
 
 Tags are always an array of strings, not numbers or composite data structures. This keeps parsers simple (at the cost of sometimes doing dumb things like encoding numbers as strings or nesting JSON-encoded strings in JSON data structures). Usually there are at least two entries, conventionally (though not necessarily) being treated as key/value pairs. Some specifications  include four or more positional items in a tag, while other include only one.
 
-For example, the [NIP 70](https://github.com/nostr-protocol/nips/blob/master/70.md) protected tag `['-']` has no values. The presence of the tag merely indicates that the event that the protected tag is on should only be published to relays by its author.
+For example, the [NIP 70](https://github.com/nostr-protocol/nips/blob/master/70.md) protected tag `['-']` has no values. The presence of the tag merely indicates that relays should only accept such event if they're published directly by their author.
 
 Another example is the [NIP 18](https://github.com/nostr-protocol/nips/blob/master/18.md) `q` tag, which is used to reference a quoted event. This tag contains an event ID, a relay URL where the event might be found, and the pubkey of the event's author, for example: `["q", "<event id>", "wss://relay.example.com/", "<pubkey>"]`.
 
@@ -233,7 +233,7 @@ Tags can fall into one of three categories: data, filters, and behavior. These t
 
 "Data" tags are primarily useful for handling or displaying the event. "Filter" tags might also be data tags, but are especially useful for filtering and retrieval. "Behavior" tags introduce additional context that determines how implementations should handle an event, independent of the specification which defines the event's kind.
 
-An example of a "data" tag is the [NIP 92](https://github.com/nostr-protocol/nips/blob/master/92.md) `imeta` tag, which includes metadata for a URL for display. Because imeta is not a single letter, most relay implementations are not going to allow filtering by `#imeta` (which wouldn't make sense anyway). `imeta` is only useful for enhancing the rendering and handling of a given event after you've already retrieved it.
+An example of a "data" tag is the [NIP 92](https://github.com/nostr-protocol/nips/blob/master/92.md) `imeta` tag, which includes metadata for a URL for display. Because `imeta` is not a single letter, most relay implementations are not going to allow filtering by `#imeta` (which wouldn't make sense anyway). `imeta` is only useful for enhancing the rendering and handling of a given event after you've already retrieved it.
 
 In contrast, `t` tags are useful not only as data, but as filters, since they represent "hashtag" or "topic". Since they are a single letter, it's possible to filter events by topic.
 
@@ -245,7 +245,7 @@ The difference between "data" and "filter" tags isn't too consequential because 
 
 Behavior tags, on the other hand, are not defined by an event kind's spec, but by some other NIP, and can be applied to any event. Here are some examples:
 
-- [NIP 70](https://github.com/nostr-protocol/nips/blob/master/70.md) defines a `-` tag, which specifies that an event should only be published by the event's author to a relay
+- [NIP 70](https://github.com/nostr-protocol/nips/blob/master/70.md) defines a `-` tag, which specifies that relays should only accept directly from its author
 - [NIP 29](https://github.com/nostr-protocol/nips/blob/master/29.md) defines the `h` tag, which is used in to publish an event to a "group" or "room"
 - [NIP 40](https://github.com/nostr-protocol/nips/blob/master/40.md) defines the `expiration` tag, which is used to request deletion after a certain amount of time
 - [NIP 89](https://github.com/nostr-protocol/nips/blob/master/89.md) defines the `client` tag, which can be used to indicate which client published the event
@@ -263,7 +263,7 @@ These tags in particular aren't too problematic since they're not re-used in oth
 
 That a single tag can sustain so many different meanings is a testament to the effectiveness of the `kind` system.
 
-This would all be fine, if `e` tags didn't *also* indicate the "mention" of an event by ID, which is specified in old versions of NIPs [10](https://github.com/nostr-protocol/nips/blob/master/10.md) and [18](https://github.com/nostr-protocol/nips/blob/master/18.md), and [23](https://github.com/nostr-protocol/nips/blob/master/23.md). This pattern of "mentioning" events by `e` tag is intended to be applicable to any event - but this comes into conflict with all the special meanings enumerated above, which means it's impossible to unambiguously use the "generally applicable" meaning of the `e` tag on any event kind that defines `e` tag semantics.
+This would all be fine, if `e` tags didn't *also* indicate the "mention" of an event by ID, which is specified in old versions of NIPs [10](https://github.com/nostr-protocol/nips/blob/master/10.md) and [18](https://github.com/nostr-protocol/nips/blob/master/18.md), and [23](https://github.com/nostr-protocol/nips/blob/master/23.md). This pattern of "mentioning" events by `e` tag is intended to be applicable to any event — but this comes into conflict with all the special meanings enumerated above, which means it's impossible to unambiguously use the "generally applicable" meaning of the `e` tag on any event kind that defines `e` tag semantics.
 
 This problem could have been solved by separating data, filter, and behavior tags into separate fields on an event, rather than coupling a tag's name with its semantics. One `e` tag could be placed in a `filter_tags` field, and a different one in the `data_tags` field. But this is just me imagining alternate futures. In practical terms, this problem is just something to keep in mind when designing tags that can be applied to "anything", especially when they need to be indexable.
 
@@ -273,9 +273,9 @@ Here's a simple heuristic for dealing with overloaded tags: when resolving the m
 
 Another example of this data/behavior design flaw is the idea of event kind ranges.
 
-When the protocol was first built, there was no special behavior attached to event kinds. But eventually, kind `0` profile metadata events started clogging up relay databases with different versions of users' profiles. In order to avoid a bunch of redundant profile metadata events, it was decided that kind `0` should be "replaceable". In other words, every time a user publishes a kind `0` event, the relay should delete all the old kind `0`s from that pubkey.
+The idea of an "event" is that it is a self-contained, irrevocable fact. But for some use cases, like `kind 0` profile metadata, only the most recent event by a given pubkey is really useful. So, in order to avoid a bunch of redundant profile metadata events, it was decided early on that kind `0` should be "replaceable". In other words, every time a user publishes a kind `0` event, the relay should delete all the old kind `0`s from that pubkey.
 
-This freed up room in the database, but it also eliminated the ability to fetch multiple versions of user metadata, which means that race conditions that occur as a result of updating user metadata in multiple places at the same time can no longer be resolved except by special purpose relays or services that retain all versions of your profile metadata.
+This freed up room in the database, but it also eliminated the ability to fetch multiple versions of profile metadata, which meant that race conditions that occur as a result of updating user metadata in multiple places at the same time could no longer be resolved except by special purpose relays or services that retain all versions of profile metadata.
 
 Events are amazing because their ID is the hash of their content, which makes them a "referentially transparent" data type. In other words, events are "content addressable" — if you have an event ID, you know the event is never going to change underneath you.
 
@@ -291,13 +291,13 @@ Finally, we have kind `30000` through `39999`, which are called "parameterized r
 
 This all makes sense, but it has a major downside — it couples kind numbers with behavior, regardless of what spec the kind is defined by. You might think this is fine because specs can just choose a kind that is in the correct range. And that's mostly true, except that these retention/replacement policies are really orthogonal to the data type represented by the kind. It's entirely possible to conceive of multiple follow lists, or a replaceable microblogging event.
 
-This behavior really should have belonged in behavior tags, which would allow users to select retention behavior for any event regardless of content type. In fact, we have an `expiration` tag, which is a superset of kind `2XXXX` ephemeral event functionality. That entire kind range is essentially useless now. Similarly, any event could be made replaceable by adding a `d` tag (set to an empty string, if regular replaceable functionality is desired).
+This behavior really should have belonged in behavior tags, which would allow users to select retention behavior for any event regardless of content type. In fact, we have an `expiration` tag, which is a superset of kind `2XXXX` ephemeral event functionality, making that entire kind range essentially redundant. Similarly, any event could be made replaceable by adding a `d` tag (set to an empty string, if regular replaceable functionality is desired).
 
 But I digress. We might get these extensions in the future, but for now we have to work with the limitations of kind ranges. My point is, when you're defining new event types, you should have a slight bias towards regular, non-replaceable events because they don't break referential transparency.
 
 ## Deleting Events
 
-One final bit of behavior that's worth mentioning in this context is deletion requests. These are kind `5` events that can either `e` tag an event's ID or `a` tag an event's address. Relays receiving a kind `5` event are expected to delete all matching events — provided the author is the same.
+One final bit of behavior that's worth mentioning in this context is deletion requests. These are `kind 5`events that can either `e` tag an event's ID or `a` tag an event's address. Relays receiving a `kind 5` event are expected to delete all matching events — provided the author is the same.
 
 It's important that these be considered deletion *requests*, not actual deletions. Relays are not obligated to honor the request (although in practice many do).
 
@@ -377,79 +377,87 @@ Over time, Nostr protocol development has gotten increasingly conservative. As u
 
 Now that we've gotten some of the boring stuff out of the way, we can get into some of the meat of what makes Nostr special. While Nostr makes things marginally more exciting by virtue of its design choices, data modeling is common to pretty much every form of software. What isn't as commonplace is Nostr's use of cryptography.
 
-Nostr is built on the same elliptic curve that Bitcoin is built on: secp256k1, which is based in turn on elliptic curve Diffie-Hellman, or ECDH. Diffie-Hellman is a technique that's been around for a long time and enables all kinds of things, from digital signatures, to encryption, to secret sharing, and even distributed signature schemes. This won't be a thorough explanation of what all we might be able to accomplish with ECDH, just a primer on how Nostr uses it and why it matters.
+Nostr is built on the same elliptic curve that Bitcoin is built on: secp256k1. Asymmetric cryptography enables all kinds of neat things from digital signatures, to encryption, to secret sharing, and even distributed signature schemes. This chapter isn't a complete catalog of what we might be able to accomplish with it, but will instead focus on how Nostr uses it and why it matters.
 
-For starters, digital signatures in particular are essential to making Nostr work. The goal of Nostr is to break down walled gardens by subverting one of their key value propositions: content authentication. Or, in other words, the ability to know that a particular person said a particular thing.
+## Information Wants to Be Free
 
-This is a challenge in the digital world because information can be copied or fabricated at will. Simply saying that someone authored a particular piece of content doesn't make it so. When you go to Twitter and you load up a tweet, you only know that tweet is real and was actually created by the person that Twitter says it was created by because you trust Twitter. If you don't trust Twitter, you can't know if it is real or forged. And if someone takes a screenshot of that or copies the text and emails it to you, then you have even less assurance that what's been presented to you is actually authentic.
+Digital signatures are essential to making Nostr work. The goal of Nostr is to break down walled gardens by subverting one of their key value propositions: content authentication. Or, in other words, the ability to know that a particular person said a particular thing.
 
-What this means is that data that is not cryptographically signed is tightly coupled to custody. The only person who can reliably attest to the authenticity of a given piece of information is the person who can trace its provenance from the author, through storage, and to your device. This is very convenient for social media platforms - reliance on unsigned data means that they are needed. There has to be a single trustworthy custodian in order for unsigned data to work. The same is true of search results on Google; you don't know that search results are any good unless Google says they are.
+This is a challenge in the digital world because information can be copied or fabricated at will. Simply saying that someone authored a particular piece of content doesn't make it so. When you go to Twitter and you load up a tweet, you only know that tweet is real because you trust Twitter. And if someone takes a screenshot of that or copies the text and emails it to you, then you have even less assurance that what's been presented to you is authentic.
 
-What signed data gives us is the ability to know that something is true without having to trust anyone. (This is also true of zero-knowledge proofs, or ZKPs, which allow the result of an arbitrary computation to be proved without revealing certain information. ZKPs are outside the scope of this document, but are common in cryptocurrency applications, and could be applied in interesting ways to nostr.)
+What this means is that data that is not cryptographically signed is tightly coupled to custody. The only person who can reliably attest to the authenticity of a given piece of information is the person who can trace its provenance from the author, through storage, and to your device. This is very convenient for social media platforms — reliance on unsigned data means that they are needed. There has to be a single trustworthy custodian in order for unsigned data to work. The same is true of search results on Google; you don't know that search results are any good unless Google says they are.
 
-If I create a note on Nostr, I use my private key to sign it, which allows anyone else to verify the result against the hash of the event and my public key (which is attached to the event). This lets them know that the event was created by the person who has access to my private key, A.K.A., me.
+What signed data gives us is the ability to know that something is true without having to trust anyone. If I create a note on Nostr and use my private key to sign it, anyone can verify the signature using the hash of the event and my public key (which is attached to the event). This lets them know that the event was created by the person who has access to my private key, i.e., me.
 
-What this means is that I can take a Nostr event and send it over an untrusted channel without the person reading it losing the ability to know that it was me who said it. As long as they know my public key, I can email a Nostr event, I can send a Nostr event over a peer-to-peer communication or over Bluetooth or over the LAN, or I can print it up and send it by mail.
-
-This verifiability is one of two primary design goals listed in the seminal 1977 RSA paper (the other being privacy):
-
-> The era of “electronic mail” may soon be upon us; we must ensure that two important properties of the current “paper mail” system are preserved: (a) messages are private, and (b) messages can be signed. We demonstrate in this paper how to build these capabilities into an electronic mail system.
+A Nostr event can thus be sent over an untrusted communication channel without the recipient losing the ability to know that it was me who signed it. As long as they know my public key, I can email a Nostr event, I can send a Nostr event over a peer-to-peer communication or over Bluetooth or over the LAN, or I can print it up and send it by mail. No intermediary can stop me without securing a monopoly on my communication.
 
 ## Publicity Technology
 
-I'll hold off on discussing encryption until another chapter. For now I want to focus on what signed data (and by extension cryptographic identity) gets us, and how best to use it.
+The business model that fuels today's social media platforms is predicated on the capture of user data for their exclusive monetization. The user has become the product. Our data is used in a focused way to create targeted advertisements, or in the aggregate to understand and anticipate user behavior.
 
-The current business model that fuels social media platforms is predicated on the capture of user data for their exclusive monetization. The user has become the product. Our data is used in a focused way to create targeted advertisements, or in the aggregate to understand and anticipate user behavior.
+Signed data solves only half of this problem — it actually *worsens* the problem to the extent that data is public and accessible to anyone who wants to analyze it for patterns. Designing digital identity also has an incredible amount of complexity involved, and must be approached with caution. From Philip Sheldrake's essay, [Human identity: the number one challenge in computer science](https://generative-identity.org/human-identity-the-number-one-challenge-in-computer-science/):
 
-Signed data solves half of that problem. Assuming that signed data is not kept private and is publicly available, it actually worsens the data analysis problem by making all activity public and accessible to anyone who wants to analyze it for patterns and manipulate people in the aggregate. This is a weakness of Nostr that should not be neglected - Nostr is not privacy technology (at least, not by default).
+> Put starkly, many millions of people have been excluded, persecuted, and murdered with the assistance of prior identity architectures, and no other facet of information technology smashes into the human condition in quite the same way as digital identity[...] This should give anyone involved in digital identity cause to consider the emergent (i.e. unplanned) consequences of their work.
 
-Nostr is publicity technology. When you create an event and you send it to untrusted custodians with no access controls or encryption layered on top, you are advertising something about yourself to the entire world. All the data included in an event and all the metadata that can be harvested by observers and middlemen points back to you and tells them something about you.
+When designing systems that make use of digital identity, it's important to work from a conception of identity not as *objective*, but as *subjective* — that is, defined not by a set of static attributes, but by the dialectical contexts and relationships the person behind the identity participates in. The former kind of identity allows others to *act upon* the identity; the latter allows the person who own the identity *to act.*
 
-This is perfectly acceptable for Twitter clone use cases, but has to be considered when building products on Nostr that require a higher level of user privacy. For this reason, it's best to use a VPN and Tor in combination with Nostr if you're concerned about privacy. Even so, in the aggregate this data can still be collected and used to understand both individual users and entire social clusters.
+Cryptographic identity doesn't automatically make this distinction, but can be used in either way. If the goal is user empowerment, a system of identity that is crafted to protect the digital freedoms of the user must be carefully designed.
 
-With that caveat out of the way, signed data does solve the other half of the problem, which is the capture of user attention through intermedation. The current business model of social media platforms is predicated on the attention users give the platform, which is maximized by designs which stimulate engagement. To define my terms, "engagement" is the consumption and creation of digital content.
+Because identity is intended to be shared in a social setting, Nostr is not really "privacy technology". Rather, Nostr is "publicity technology".
 
-The old way of doing this was through centralized content production. A business would create content - for example, movies, magazines, or podcasts - and present it to users for their consumption. Of course, it was a lot easier to directly monetize this content because it was both high quality and protected by intellectual property laws. On social media, content is not produced by the platform, but by users. This introduces a second side to engagement - users not only consume, but also produce content, which keeps them even more engaged, and provides even more information about them to the platform.
+When you create an event and you send it to untrusted custodians (particularly if left unprotected by access controls or encryption) you are advertising something about yourself to the entire world. All the data included in an event and all the metadata that can be harvested by observers and middlemen points back to you.
 
-When content is signed, it can no longer be captured by the platform. The result is that platforms lose the ability to enforce their monopoly on user attention. As a result of signed data, user attention can be diverted to other platforms that host a copy of the data. Nostr takes this effect even further by decoupling data storage and user interaction - relays store notes, but clients mediate user interactions.
+This is suitable for Twitter-like use cases (although user privacy is a concern even in a broadcast social media context), but always has to be considered when building products on Nostr. For users, it's best to use a VPN and Tor in combination with Nostr if you're concerned about privacy. Even so, in the aggregate signed data can still be collected and used to understand both individual users and entire social clusters.
+
+## Dis-intermediating Data
+
+With that in mind, signed data does help reduce the capture of user attention by dis-intermediating content delivery. The current business model of social media platforms is predicated on the attention users give the platform, which is maximized by designs which stimulate "engagement", the creation and consumption of digital content.
+
+The old way of doing this was through centralized content production. A business would create content — for example, movies, magazines, or podcasts — and present it to users for their consumption. Of course, it was a lot easier to directly monetize this content because it was both high quality and protected by intellectual property laws.
+
+On social media, content is not produced by the platform, but by users. This introduces a second side to engagement — users not only consume, but also produce content. This keeps them even more engaged, and provides even more information about them to the platform.
+
+When content is signed, it can no longer be captured by the platform (even if it is still visible to the platform). The result is that platforms lose the ability to enforce their monopoly on user attention. As a result of signed data, user attention can be diverted to other platforms that host a copy of the data. Nostr takes this effect even further by decoupling data storage and user interaction — relays store notes, but clients mediate user interactions.
 
 On Nostr, clients can be more aligned with users, since they can only capture user attention to the extent that their *functionality* is what's valuable to the user, not the *data* they have access to.
 
-The ability users have on an open network to leave a platform without losing all their data or their social graph is called "credible exit". This is the opposite of "vendor lock-in," which occurs when platforms make it difficult to leave them. If you've logged 15 years of activity on Facebook, it's very hard to leave Facebook - the export feature Facebook offers is nearly useless because it breaks all the links in your social graph. But if all your Facebook data was signed and the social graph was open, it would be very easy to leave.
+The ability users have on an open network to leave a platform without losing all their data or their social graph is called [credible exit](https://newsletter.squishy.computer/p/credible-exit). This is the opposite of "vendor lock-in", which occurs when platforms make it difficult to leave them. The export features social platforms offer are nearly useless because they break all the links in your social graph. But if all your social data was signed and the social graph was open, it would be quite easy to leave.
 
-Social media companies can still exist in the world of signed data, but they will have to offer a real value proposition to their users in order to retain them. This means that they'll be more likely to serve their users rather than extract as much value as possible from them.
+Social media companies can still exist in a world of signed data, but they will have to offer a real value proposition to their users in order to retain them. This means that they'll be more likely to serve their users rather than extract as much value as possible from them.
 
-Whether open source software wins out, or for-profit companies start building on Nostr, signed data weakens platforms' hold on their users and realigns the interests of social media with users. And while I think there's still room for skepticism about the effects of social media in general, this corrects a lot of perverse incentives that currently exist in the system.
+Whether open source software wins out or for-profit companies start building on Nostr, signed data weakens platforms' hold on their users and realigns the interests of social media platforms with those of their users. And while I think there's still room for skepticism about the effects of social media in general on people and communities, removing lock-in fixes a lot of existing perverse incentives in the system.
 
 ## Your Very Own Number
 
-Very closely related to the idea of signed data is that of cryptographic identity. On almost every digital platform in existence, identities are the property of the platform, not of the user. In most cases, a user identity is not actually the user's email, phone number, or a username, but a numeric ID or UUID that's stored in a database. This number is generated by the platform when a user registers, and belongs to it. The platform can change this number, redefine it, give it away, or delete it at any time and with impunity.
+On almost every digital platform in existence, identities are the property of the platform, not of the user. In most cases, a user identity is not actually the user's email, phone number, or a username, but an ID that's stored in a database. This number is generated by the platform when a user registers, and belongs to the platform, which can change this number, redefine it, give it away, or delete it at any time and with impunity.
 
-The internet of today is entirely occupied by renters. Users go from one place, from one website or app to another, asking the owner of that property if they can *please* check their messages, post a meme, express an opinion, or buy something. Users have next to no leverage to force their way in to the vault that holds their data. Content creators are frequently deplatformed. Community groups are banned. Even websites are frequently taken down.
+The internet of today is entirely occupied by renters. Users move from one website or app to another, asking the owner of that digital estate if they can *please* check their messages, post a meme, express an opinion, or buy something. Users have next to no leverage to force their way in to the vault that holds their data. Content creators are frequently de-platformed. Community groups are banned. Even websites are frequently taken down.
 
-This is even more insidiously evident with social sign-on. When a website integrates Facebook or Google social sign-on, not only does the identity provider get the ability to track your movements across the internet, but they also get the ability to revoke your access to these third party services at any time! Even if you don't use social sign on, your email provider probably has the same ability to revoke your access from the rest of the internet. This over-reliance on identity providers leaves users extremely dependent and vulnerable.
+Even worse, when a website integrates social sign-on (to make life easier for the user of course), not only does the identity provider get the ability to track your movements across the internet, but they also get the ability to revoke your access to these third party services! Even if you don't use social sign on, your email provider probably has the same ability to revoke your access from the rest of the internet. This over-reliance on identity providers leaves users extremely dependent and vulnerable.
 
 An "account" is simply an entry in a database that associates some asset with a person or an entity. The user is the entity, and the custodian holds the asset. Whether you're signing in to Netflix, sharing your PPI with your bank teller, or swiping your keycard to get into work, the credentials you present are *issued* to you by the service or an authority they trust (yes, even your birth date, which is only meaningful because it's printed on your ID).
 
-Cryptographic identity turns this on its head, because instead of being granted an identity by a platform, you provide your own user ID. And because you don't have to tell anyone your secret in order to prove you own it, you have exclusive access to your identity.
+Cryptographic identity turns this on its head, because instead of being granted an identity by a platform, you provide your own user ID. And because you don't have to tell anyone your private key in order to prove you own it (in contrast with, say, social security numbers), *you* have exclusive access to your identity.
 
-Secret keys can also be generated out of thin air, giving you as many identities as you need. This allows you to re-use an identity as much or as little as you need, depending on whether you're looking for privacy or convenience in any given case. Using the same key for your social media profile as well as for your wallet makes it easy to pay friends - but might also link your payment history to your public persona.
+Secret keys can also be generated out of thin air, giving you as many identities as you need. This allows you to re-use an identity as much or as little as you need, depending on whether you're looking for privacy or convenience in any given case. For example, using the same key for your social media profile as well as for your wallet makes it easy to pay friends — but might also link your payment history to your public persona.
 
-This of course requires users to be responsible and understand the privacy trade-offs of reusing their keys, just like it requires users to know not to reuse their passwords. But the key point here is that user experience and education can be layered on top of this primitive in a way that can't be layered on top of custodial account access. Cryptographic identities allow users to be exclusively and finally in charge of their identity.
+This of course requires users to be responsible and understand the privacy trade-offs of reusing their keys, just like it requires users to know not to reuse their passwords. But user education is a tractable problem, while digital freedom is impossible without cryptographic identities. Users can be exclusively and finally in control of their identity.
 
 ## Agency and Identity
 
-Cryptographic identities attack walled gardens from multiple directions at once. Because data is signed and verifiable, platforms are no longer necessary for tracing the provenance of a given message or social media post. The flipside of this is that platforms are no longer able to act on the behalf of their users with impunity. If data is expected to be signed and users hold their own keys, user activity can no longer be forged. This is important in cases where action is required in order to deplatform someone - for example, when moving money out of a bank account.
+Cryptographic identities attack walled gardens from multiple directions at once. Because data is signed and verifiable, platforms are no longer necessary for tracing the provenance of a given message or social media post.
+
+The flip side of this is that platforms are no longer able to act on behalf of their users with impunity. If data is expected to be signed and users hold their own keys, user activity can no longer be forged. This is important in cases where action is required in order to de-platform someone — bank accounts can be frozen, but bitcoin wallets are held in alodium.
 
 Cryptographic identities are more private than claims that are shared with custodians. When you sign in with a username and password, that goes into a database that may be the target of leaks or hacks. If it's valuable, this data almost always ends up on the dark web.
 
-In contrast, when using asymmetric key pairs the only thing that can leak from the third party database is your public key, since your private key never leaves your device. Of course there's a whole art to keeping your private key safe, which we'll get into later. But even without sophisticated key management, cryptographic identities drastically decrease users' vulnerability to identity theft and phishing attacks.
+In contrast, when using asymmetric key pairs the only thing that can leak from the third party database is your public key, since your private key never leaves your possession. Of course there's a whole art to keeping your private key safe, which we'll get into later. But even without sophisticated key management, cryptographic identities drastically decrease users' vulnerability to identity theft and phishing attacks.
 
 ## Identity Webs
 
-Identity a la carte is not the end of the story though. Cryptographic identities can free data from custodians, but they can also be referenced *by* that data, making it possible to assign meaning to identities themselves. A simple example of is a "mention", which allows someone to be notified about a conversation and engage with it. The same goes for direct messages, payments, friends, follows, and more. Since each reference of a public key is also signed, relationships between keys can begin to form. This is known informally as "webs of trust", although the word "trust" might overstate how reliable these connections are. A better term might be "identity webs".
+Identity *a la carte* is not the end of the story though. Cryptographic identities can free data from custodians, but they can also be referenced *by* that data, making it possible to assign meaning to identities themselves. A simple example of this is a "mention", which allows someone to be notified about a conversation and engage with it. The same goes for direct messages, payments, friends, follows, and more. Since each reference of a public key is also signed, relationships between keys can begin to form. This is known informally as "webs of trust", although the word "trust" might overstate how reliable these connections are. A better term might be "identity webs".
 
-The semantics of connections between identities may be more or less explicit (a social media "follow" is a pretty well-defined concept, while a comment on a blog post carries far less meaning), but every connection has significance. In the aggregate, the same types of analysis that threaten user privacy (as mentioned above) can be leveraged to benefit user who voluntarily produce content for public consumption.
+The semantics of connections between identities may be more or less explicit (a social media "follow" is a pretty well-defined concept, while a comment on a blog post carries far less meaning), but every connection has significance. In the aggregate, the same types of analysis that threaten user privacy (as mentioned above) can be leveraged to benefit users who voluntarily produce content for public consumption.
 
 Whether through simplistic analysis of follow graphs or sophisticated analysis that scores transitive relationships or different types of interactions, reputation can be assigned to identities. We often think of "reputation" in objective terms, but in reality it's entirely relative to the values and network of the person assessing reputation.
 
@@ -457,19 +465,17 @@ In concrete terms, if you follow someone you're expressing a non-zero amount of 
 
 For this reason, reputation has to be calculated from a trusted starting point and only via trusted connections, or else it becomes subject to sybil attack. If reputations are not calculated conservatively, it can become trivially easy for sock-puppet accounts to infiltrate a network. In other words, if you calculate reputation starting from the perspective of a scammer, you're going to have scammy scores. Likewise, if you over-weight weak attestations (for example, ambiguous emoji reactions), it's unlikely you're going to get good results. Garbage in, garbage out.
 
-This conservatism naturally results in network partitioning, in which someone from one social cluster might find it difficult to establish the reputation of someone in a different social cluster. There are "global" algorithms like PageRank (named after Larry Page) which attempt to circumvent this constraint, but are inherently vulneralbe to sybil attack to some extent.
+This conservatism naturally results in network partitioning, in which someone from one social cluster might find it difficult to establish the reputation of someone in a different social cluster. There are "global" algorithms like PageRank (named after Google's Larry Page) which attempt to circumvent this constraint, but are inherently vulnerable to sybil attack.
 
 One solution to this problem that is frequently proposed is to supplement implicit or weak attestations with more explicit, annotated attestations. Instead of using a single number which "scores" the subject, multiple scores might be calculated along any number of axes. For example, instead of "I follow this person", you might want to indicate "I trust this person to recommend movies."
 
-This approach can work in certain contexts like reviews for products or services. But in most cases, getting users to publish such explicit attestations is difficult to incentivize. A good example of this is PGP which, despite the enthusiasm nerds have for building trust graphs, has failed to be widely adopted by non-technical users. The reason for this is that the creation of these attestations has no immediate utility - they are entirely instrumental, requiring up-front investment in order to achieve their purpose. In contrast, follows, likes, and replies all have their own immediate, intuitive incentive. For this reason, webs of trust will always be more or less implicit, and rely on careful and qualified data analysis.
+This approach can work in certain contexts like reviews for products or services. But in most cases, getting users to publish such explicit attestations is difficult to incentivize. A good example of this is PGP which, despite the enthusiasm nerds have for building trust graphs, has failed to be widely adopted by non-technical users. The reason for this is that the creation of these attestations has no immediate utility — they are entirely instrumental, requiring up-front investment in order to achieve their purpose. In contrast, follows, likes, and replies all have their own immediate, intuitive incentive.
 
-It's important to realize that trust is always qualified. Just because someone is good at recommending recipies does not mean you should trust their political opinions. This is especially true when differentiating between different trust contexts. Trust derived from follow graphs may be very useful for identifying spam or ideological alignment, but might not be useful for assessing whether someone is safe to meet in a dark alley.
-
-An example of this is social ratings for ecash mints. Because the stakes for choosing the wrong mint are fairly high (you can lose your wallet balance), whether a mint is trustworthy is difficult to assess, and is more dependent on having a solid model for how past actions predict future actions. For example, if an ecash mint has a large number of high reviews, that means next to nothing about how likely the mint actually is to steal funds - only that it hasn't rugged users yet. Odds are the mint has gained this reputation based on low latency, high availability, or good customer service.
+For this reason, webs of trust will always be more or less implicit, and rely on careful and qualified data analysis. Just because someone is good at recommending recipies does not mean you should trust their political opinions. This is especially true when differentiating between different trust contexts. Trust derived from follow graphs may be very useful for identifying spam or impersonation, but might not be useful for assessing whether someone is safe to meet in a dark alley.
 
 Digital representation of social trust is inherently weaker than authentic social trust, because it is predicated only on the subset of information that can be collected. Major factors in assessing trust in real life (such as physical appearance, credit score, or criminal record) might be entirely absent in a digital setting. This is especially true for new users who don't yet have any attestations from other users about the authenticity or value of their activity.
 
-However, there are additional affordances that Nostr provides which can supplement the trust graph. Synthetic attestations can be generated on behalf of new users by services with an established reputation by reviewing government-issued identification or asking for a picture of th person with a shoe on their head. Another method is "proof-of-work", originally invented to frustrate email spam. NIP-13 specifies how a given event can demonstrate that a certain amount of computational work went into its creation. Both of these methods have their limitations (identity theft, AI-generated imagery, and GPU farms can all bypass these measures if the incentive is valuable enough), but they can factor into a more robust trust profile.
+However, there are additional affordances that Nostr provides which can supplement the trust graph. Synthetic attestations can be generated on behalf of new users by services with an established reputation by reviewing government-issued identification (or by asking for a picture of the person with a shoe on their head). Another method is "proof-of-work", originally invented to frustrate email spam. [NIP 13](https://github.com/nostr-protocol/nips/blob/master/13.md) specifies how a given event can demonstrate that a certain amount of computational work went into its creation. Both of these methods have their limitations (identity theft, AI-generated imagery, and GPU farms can all bypass these measures if the incentive is valuable enough), but they can factor into a more robust trust profile.
 
 ## Holding Keys
 
@@ -477,53 +483,57 @@ Cryptographic identity promises a lot, but all of its benefits are predicated on
 
 The stakes are slightly different though. If you lose your Bitcoin keys you can lose real money; if you lose your Nostr keys you can lose your social identity. Which one is worse depends entirely on who you are, but both have the potential to be catastrophic.
 
-Nostr also has some disadvantages in comparison with Bitcoin. With Bitcoin you can rotate keys by simply sending funds to a new address and throwing away the old address, although if you lose your key entirely you're still out of luck. On Nostr, your identity is your public key, and so is much harder to move away from. While nothing prevents copying and re-signing all your social media data with your new key, all references to your cryptographic identity would be broken - and along with them your entire reputation.
+Nostr also has some disadvantages in comparison with Bitcoin. With Bitcoin you can rotate keys by simply sending funds to a new address and throwing away the old address (although if you lose your key entirely you're still out of luck). On Nostr, your identity is your public key, and therefore much harder to move away from. While nothing prevents copying and re-signing all your social media data with your new key, all references to your cryptographic identity would be broken — and along with them your entire reputation.
 
-Key rotation is something that we have to figure out if Nostr is going to succeed in the long term. There have been some proposals, but none of them have gained enough traction to be implemented. Key rotation is an inherently hard problem, because you need to borrow the reputation of the old key in order to validate the new key in such a way that an attacker wouldn't be able to do the same thing. Decentralized identifiers (DIDs) are not really a solution because they result either in a circular system of keys or the delegation of the authority to bind names to a third party. Hierarchical keys have the same problem; the root key still has to be competently secured. There are some things we can do though to make key storage safer and more convenient.
+Key rotation is something that we have to figure out if Nostr is going to succeed in the long term. There have been some proposals, but none of them have gained enough traction to be implemented. Key rotation is an inherently difficult problem, because you need to borrow the reputation of the old key in order to validate the new key in such a way that an attacker wouldn't be able to do the same thing. Decentralized identifiers (DIDs) are not really a solution because they result either in a circular system of keys or dependence upon a trusted name registrar. Hierarchical keys have the same problem; the root key still has to be competently secured.
 
-A number of different signer protocols have been experimented with as alternatives to pasting your private key into every Nostr client you try, including browser signer extensions, Android intent-based signers, and remote "bunker" signers.
+There are some things we can do though to make key storage safer and more convenient.
+
+A number of different signer protocols exist as alternatives to pasting your private key into every Nostr client you try, including [browser extensions](https://github.com/nostr-protocol/nips/blob/master/07.md), [Android intent-based signers](https://github.com/nostr-protocol/nips/blob/master/55.md), and [remote "bunker" signers](https://github.com/nostr-protocol/nips/blob/master/46.md).
 
 The last of these is, in my opinion, the most promising. Remote signers can run on any device connected to the internet, and used in any type of application. Browser extension or Android signers can be useful as progressive enhancement, but should always be considered secondary to remote signers.
 
 The difficulty with any of these solutions is that they require new users to learn about and set up an additional component when getting started with Nostr, which is an awful UX from an onboarding perspective. One possible solution to this is for every client to include a remote signer implementation so that users can log into other clients remotely. But this is a lot of complexity to impose on client implementations, and is very difficult to execute successfully.
 
-The most promising solution to the onboarding problem is "multisig" bunkers, which allow for multiple unrelated custodians to coordinate when signing events by breaking the user's private key up into "shards". A scheme like "2 of 3" would require that two custodians collude in order to steal a user's key. But even better in the context of onboarding would be to use a "2 of 2" signature scheme, where half of the key is held by a custodian, and half of the key is held by the client onboarding the new user. This means that unless the client and the custodian collude, the user's key remains under their control. Given the likelihood of non-technical users failing to secure their keys, this can be a viable alternative to self custody for certain people.
+The most promising solution to the onboarding problem is "multisig" bunkers, which allow for multiple unrelated custodians to coordinate when signing events by breaking the user's private key up into "shards". A scheme like "2 of 3" would require that two custodians collude in order to act on behalf of the user.
 
-This approach can be improved further by sending an email to the new user with a version of their private key encrypted with a password as a backup. This helps defer the learning process for key management until the user has developed a reputation on the network, making the key valuable. When they're ready to take custody of their key, they'll have it sitting in their email inbox.
+But even better in the context of onboarding would be to use a "2 of 2" signature scheme, where half of the key is held by a custodian, and half of the key is held by the client onboarding the new user. This means that unless the client and the custodian collude, the user's key remains under their control. Given the likelihood of non-technical users failing to secure their keys, this can be a viable alternative to self custody for certain people.
 
-One other common pattern worth mentioning is seed words. Seed words are great for securing Bitcoin in cold storage because cold storage ideally requires manual entry onto a physical medium or airgapped device. A 64-character hex key is going to be a lot harder to write down than 12 or 24 words, especially if you're engraving the characters on steel.
+This approach can be improved further by sending an email to the new user with a version of their private key [encrypted with a password](https://github.com/nostr-protocol/nips/blob/master/49.md) as a backup. This helps defer the learning process for key management until the user has developed a reputation on the network, making the key valuable. When they're ready to take custody of their key, they'll have it sitting in their email inbox.
 
-But on Nostr keys are almost always stored on an internet-connected signing device, making them vulnerable in ways bitcoin keys aren't. Seed words only useful for physically backing up Nostr keys that only exist as distributed shards. This can make sense for advanced or paranoid users, but is not really relevant to onboarding new users. In most cases, putting your key in a password manager (optionally encrypted) is enough.
+One other common pattern worth mentioning is seed words. Seed words are great for securing Bitcoin in cold storage because cold storage ideally requires manual entry onto a physical medium or air-gapped device. A 64-character hex key is going to be a lot harder to write down correctly than 12 or 24 words, especially if you're engraving the characters on steel.
+
+But on Nostr keys are almost always stored on an internet-connected signing device, making them vulnerable in ways bitcoin keys aren't. Seed words only useful for physically backing up Nostr keys that exist only as distributed shards. This can make sense for advanced or paranoid users, but is not really relevant to onboarding new users. In most cases, putting your key in a password manager (optionally encrypted) is enough.
 
 # Chapter 4: Relays are Repositories
 
-Thus far we've focused mostly on "Nostr as data." But data modeling, signatures, and identity are really only half of the story. Nostr is much more than a data format - what is much more interesting is its network architecture.
+Thus far we've focused mostly on "Nostr as data." But data modeling, signatures, and identity are really only half of the story. Nostr is much more than a data format — what is much more interesting is its network architecture.
 
 ## Why WebSockets
 
-Many cutting-edge decentralized protocols are "peer-to-peer," which means they attempt to repurpose the architecture of the internet to facilitate direct communication between peers. Peer-to-peer technology is really neat, but it's also hard to get right because it works against the grain of the internet as it has been used for the last 30 years. Things like NAT traversal make this especially difficult.
+Many cutting-edge decentralized protocols are "peer-to-peer," which means they attempt to repurpose the architecture of the internet to facilitate direct communication between peers. Peer-to-peer technology is really neat, but it's also hard to get right because it works against the grain of the internet as it has been used for the last 30 years.
 
-That's not to say P2P technologies are of no use. Mesh network systems and P2P communication techniques can be great when used as fallbacks to more traditional infrastructure and networking technologies. But just like it would be very hard or impossible to completely replace the hub-and-spoke architecture of the internet with a mesh network, P2P systems are not a complete replacement for the client-server model.
+That's not to say P2P technologies are of no use. Mesh network systems and P2P communication techniques can be great when used as fallbacks from more traditional infrastructure and networking technologies. But just like it would be very hard or impossible to completely replace the hub-and-spoke architecture of the internet with a mesh network, P2P systems are not a complete replacement for the client-server model.
 
-Nostr attempts to get many of the benefits of P2P-style architectures without a lot of the hassle by using a pretty boring piece of web technology: WebSocket servers. WebSocket servers have all the same problems that regular servers have in terms of being gatekept by internet service providers, and relying on TLS root certificates and DNS registrars. DNS can be bypassed, but then users have to deal with IP addresses. TLS can be bypassed, but then implementations have to run things through Tor, which has its own trade-offs.
+Nostr attempts to get many of the benefits of P2P-style architectures without a lot of the hassle by using a pretty boring piece of web technology: WebSocket servers. WebSocket servers have all the same problems that regular servers have in terms of being gate-kept by internet service providers, since normally they rely on TLS root certificates, ISPs, and DNS registrars. Domain name resolution can be bypassed, but then users have to deal with IP addresses. TLS can be bypassed, but then implementations have to run things through Tor, which has its own trade-offs.
 
-Most nostr relays use TLS with conventional domain names. And in true Nostr fashion, this is "good enough™." Because anyone can buy a domain name and spin up a server, there are hundreds of relays out there that can be used for storing signed data. If relay operators or users want to up the ante (for example if the country they live in [man-in-the-middle attacks TLS](https://en.wikipedia.org/wiki/Kazakhstan_man-in-the-middle_attack)), they can always resort to more advanced techniques. And if a particular relay goes offline, it's only one of many redundant nodes.
+Most nostr relays use TLS with conventional domain names. And in true Nostr fashion, this is good enough™. Because anyone can buy a domain name and spin up a server, there are hundreds of relays out there that can be used for storing signed data. If relay operators or users want to up the ante (for example if the country they live in [man-in-the-middle attacks TLS](https://en.wikipedia.org/wiki/Kazakhstan_man-in-the-middle_attack)), they can always resort to more advanced techniques. And if a particular relay goes offline, it's only one of many redundant nodes.
 
 In "Simple Made Easy," Rich Hickey defines the distinction between easy and simple. "Easy" means something is "close at hand". Something that's easy may not be the best solution, but it's accessible. "Simple" means that something does one thing well without being complicated by different concerns. In technical terms, relays are not really simple. Relays are easy. Relays use WebSockets which are a layer on top of HTTP which is a layer on top of TCP/IP, which is itself a fairly complicated protocol.
 
 The trade-off here is that the technology, again, is not ideal, but good enough. WebSocket servers also allow for duplex communication rather than request-response, which allows servers to push new information to the client as soon as they receive it.
 
-Using WebSockets doesn't preclude the use of other transport protocols to send events between peers.
+But using WebSockets doesn't preclude the use of other transport protocols to send events between peers.
 
-(As an aside, I'm not talking about Nostr over HTTP. HTTP, while simple and more familiar for developers who are used to working with web technologies, is strictly worse than using WebSockets because HTTP doesn't allow for server-sent events, increases latency through polling, and makes clients and relays less efficient. If you're going to rely on the web stack, just use WebSockets.)
+As an aside, I'm not talking about Nostr over HTTP. HTTP, while simple and more familiar for developers who are used to working with web technologies, is strictly worse than using WebSockets because HTTP doesn't allow duplex communication, increases latency through polling (or requiring support for [server-sent-events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)), and makes clients and relays less efficient. If you're going to rely on the web stack, just use WebSockets.
 
 What I mean rather is alternative transport protocols that have a different simplicity/ease trade-off balance from WebSockets. In theory you could come up with a binary encoding of Nostr events and send them over QUIC, which would eliminate a lot of the overhead associated with WebSockets. This might be useful for high performance applications and servers.
 
 Alternatively, you might put a bunch of Nostr events in a JSONL file and torrent it. These events would then be replicated on a different decentralized network and could be downloaded by a client supporting that transport, improving censorship resistance (assuming the dataset is valuable enough for people to seed it).
 
-Another example would be to use P2P technologies as progressive enhancement. In other words, you could enhance the connectivity of Nostr applications in certain scenarios without breaking the base protocol. This might be a useful when designing a mobile application for people in rural areas with little network coverage. If the network isn't available, devices would fall back to direct connection over Bluetooth or WiFi Direct.
+Another example would be to use P2P technologies as progressive enhancement. In other words, you could [enhance the connectivity of Nostr applications](https://github.com/nostr-protocol/nips/pull/1979) in certain scenarios without breaking the base protocol. This might be a useful when designing a mobile application for people in rural areas with little network coverage. If the network isn't available, devices would fall back to direct connection over Bluetooth or WiFi Direct.
 
-This technique was pioneered originally by Secure Scuttlebutt (SSB), which started with P2P technologies and then added pubs as a way of bridging devices that weren't directly connected. Nostr simply reverses this model and makes pubs the primary means of communication and optionally adds P2P when required. Of course, these alternative transport protocols have by and large not been specified or implemented, but there's nothing to keep us from creating them.
+This technique was pioneered by Secure Scuttlebutt (SSB), which started with P2P technologies and then added pubs as a way of bridging devices that weren't directly connected. Nostr simply reverses this model and makes pubs the primary means of communication and optionally adds P2P when required. Of course, these alternative transport protocols have by and large not been specified or implemented, but there's nothing to keep us from creating them.
 
 In terms of transport protocol, Nostr opted for "easy" by default. But this dimension of the relay network is secondary to the network architecture itself, which adheres much more closely to Hickey's idea of "simplicity". So, setting aside the transport questions for now, let's get into what relays actually do.
 
@@ -531,11 +541,9 @@ In terms of transport protocol, Nostr opted for "easy" by default. But this dime
 
 A key aspect of Nostr's architecture is its reliance on more than one relay for storing data. As we mentioned in the previous chapter, relays can't falsify anything because your data is signed. They don't have the ability to lock users in or create a data moat. What they do have, however, is the ability to censor or delete user data.
 
-If you use only a single relay, that relay has complete control over which of your signed events get rebroadcast to other people. It may even selectively censor data depending on who's asking for it or what you're publishing. Adding an additional relay decreases your vulnerability to censorship in a strightfoward way. If, say, you have a 10% chance all things being equal of being deplatformed by a single relay, publishing to two relays gives you a 1% chance; three relays gives you a 0.1% chance. Beyond that, if you're particularly sensitive to the risk of deplatforming, your best option is probably to self-host or select relays you can rely upon to host your content.
+If you use only a single relay, that relay has complete control over which of your signed events get rebroadcast to other people. It may even selectively censor data depending on who's asking for it or what you're publishing. Adding an additional relay decreases your vulnerability to censorship in a straight-forward way. If, say, you have a 10% chance, all things being equal, of being de-platformed by a single relay, publishing to two relays gives you a 1% chance; three relays gives you a 0.1% chance. Beyond that, if you're particularly sensitive to the risk of de-platforming, your best option is probably to self-host or select relays you can explicitly trust to host your content.
 
-For the average user, a small number of relays can yield most of the benefits of nostr's architecture. Some people add 20 or more relays to their relay selections, but all that does is multiply the amount of bandwidth that's burned when sending and receiving messages.
-
-The same fallacy that "more is better" is evident with relay operators - many people run a relay just so they can "run a node". But (to borrow a term from Bitcoin), you have to have "an economical node". In other words, people have to use it - and you have to keep it running.
+The fallacy that "more is better" is evident with relay operators — many people run a relay just so they can "run a node". But (to borrow a term from Bitcoin), you have to have "an economical node". In other words, people have to use it — and you have to keep it running.
 
 For the average social media user, three to five popular relays is generally enough. As long as the relays provide a good mix of different admins, jurisdictions, and policies, you're very unlikely to lose all your hosts at once. Even if you do, you still have your key! Just keep a periodic backup of your content and re-broadcast it when you find more trustworthy hosts.
 
@@ -543,7 +551,7 @@ This ignores the problem of which relays should be used to store what content. S
 
 ## Functional Relays
 
-Relays are, in essence, repositories of events. They hold a bunch of events in some database or other and grant access to those events using the Nostr WebSocket protocol. This protocol involves sending JSON-encoded messages over WebSockets using just a few core commands:
+Relays are simple repositories of events. They hold a bunch of events in some database or other and grant access to those events using the Nostr WebSocket protocol. This protocol involves sending JSON-encoded messages over WebSockets using just a few core commands:
 
 - Clients can send an `EVENT` message in order to publish an event to a relay
 - Relays respond to client `EVENT` messages with an `OK` message, which includes whether the event was accepted or rejected and an human-readable message with details
@@ -552,13 +560,11 @@ Relays are, in essence, repositories of events. They hold a bunch of events in s
 
 There are a few other control messages, including `CLOSE`, which allows a client to close a `REQ`; `CLOSED`, which allows a relay to close a `REQ`, and `EOSE`, which allows relays to let clients know when they've sent all events initially matched by a `REQ` (the relay might continue to stream matching events as it receives them).
 
-There are some other details which we'll get to below, but this is pretty much it! A relay is just a bucket you put events into and then take them out again.
+There are some other details which we'll get to below, but this is pretty much it! A relay is just a bucket that you put events into. Later, you or someone else might take them out again.
 
 Some additional commands have been proposed, and in some cases added to the protocol, but to the extent that they stray outside of this basic repository paradigm they only complicate things for little or no benefit. One example is `COUNT`, which might seem useful at first until you consider that in order to count events in a decentralized network you need a way to reconcile those events between multiple servers. COUNT doesn't do that, making it useful only when working with a single relay.
 
-Treating relays as simple event repositories allows for layering on additional functionality using separate interfaces. We'll get to this later on, but "data vending machines" (also known as "DVMs") are a great way to do this. If you need to count events, data vending machines allow for aggregation across multiple relays. The DVM protocol is completely open in the same way that Nostr events are, which means new functionality can easily be added, advertised, and integrated.
-
-For the sake of decentralization, it's my opinion that the relay interfaces should be kept as minimal as possible in order to reduce implementation burden and maximize interoperability.
+For the sake of decentralization, it's my opinion that the relay interfaces should be minimal in order to reduce implementation burden and maximize interoperability.
 
 That said, there is one additional responsibility that relays can't really delegate: access control. Access control on Nostr is implemented by the `AUTH` verb. When a relay wants to know who opened a connection, it issues an `AUTH` message with a challenge string. The client then incorporates this challenge string into a `kind 22242` event, signs it, and sends it back to the relay.
 
@@ -566,27 +572,27 @@ From this point on, the relay can implement any policy it wants on the basis of 
 
 This is useful for two distinct things: content curation and access control. Many relays have policies about what kind of content is allowed on their relay, whether based on content analysis, social graph analysis, proof of work, or when an event was published. Much of this data is already available on any event that gets published to a relay, but the identity of the person publishing an event can also be an important way to vet content cross-posted from elsewhere on the network, or if the user is paying to store content on the relay.
 
-Access control is similar to, but distinct from, content curation. Relays may or may not care what events in particular they store, but they may want to allow access only to particular users. This can be useful for community relays, relays that handle direct messages, or relays that proxy content on behalf of paid subscribers.
+Access control is similar to, but distinct from, content curation. Relays may or may not care what events in particular they store, but they may want to allow access only to particular users. This can be useful for community relays, relays that handle direct messages, or relays that proxy content on behalf of paid subscribers. Likewise, relays may allow anyone to request events, but be very selective of what content is actually stored.
 
-These policies together make relays less fungible - which is, counter-intuitively, a good thing. Some large hubs accept everything except for spam, and are therefore mostly interchangeable - there's no reason to establish a relationship with one rather than the other. Other relays implement custom policies for protecting community content or direct messages, which make them more appropriate for certain use cases. Another example would be relays which return an algorithmic selection of notes from across the network, making social media "algorithms" possible.
+These policies together make relays less fungible — which is, counter-intuitively, a good thing. Some large hubs accept everything except for obvious spam, and are therefore mostly interchangeable — there's no reason to establish a relationship with one rather than the other. Other relays implement custom policies for protecting community content or direct messages, which make them more appropriate for certain use cases. Another example would be relays which return an algorithmic selection of notes from across the network, making social media "algorithms" possible.
 
-This is an important point - to the extent that relays are treated as commodities they also have to be subsidized by businesses operating on nostr. Relays that don't have a distinctive value proposition don't have a business model. This presents the danger of leading us back into the surveillance capitalism of the existing internet. Presenting relays to the end user as distinct services providers forces users to consider who they do business with and why, creating affordances for direct monetization and alignment of incentives that wouldn't exist if relays were abstracted away.
+This is an important point — to the extent that relays are treated as commodities they also have to be either subsidized by businesses operating on nostr, or run *pro bono*. Relays that don't have a distinctive value proposition don't have a business model. This presents the danger of leading us back into the surveillance capitalism of the existing internet. Presenting relays to the end user as distinct services providers forces users to consider who they do business with and why, creating affordances for direct monetization and alignment of incentives that wouldn't exist if relays were abstracted away.
 
-One final thing to note in this context is [Negentropy](https://github.com/nostr-protocol/nips/blob/master/77.md), a set-based reconciliation protocol used for efficiently syncing events between two relays (or between a client and a relay). This basically works like your standard request-response, but instead of sending all events, it sends a compact representation of all event IDs that match the filters. Clients can then request any missing events.
+One final thing to note in this context is [Negentropy](https://github.com/nostr-protocol/nips/blob/master/77.md), a set-based reconciliation protocol used for efficiently syncing events between two relays (or between a client and a relay). This allows a client to request only events it doesn't yet have, significantly reducing bandwidth requirements.
 
-This does a lot to facilitate content replication across relays without burning through resources, which in turn makes it possible for the network to re-organize itself to align with expections about where a given event "should" be stored.
+This does a lot to facilitate content replication across relays without burning through resources, which in turn makes it possible for the network to re-organize itself to align with expectations about where a given event "should" be stored.
 
 ## Replication and Routing
 
-The Nostr network is highly partition tolerant, unlike (for example) Secure Scuttlebutt, which uses Merkle trees to connect all events from a single key together, making it impossible to download a single event without downloading all events that came before it. On Nostr, you can download any dataset you want, because events aren't tied together. The cost of this is that you never know if you have all the events; the benefit is that content can be replicated more intelligently across the network.
+The Nostr network is highly partition tolerant, unlike (for example) Secure Scuttlebutt, which links all events from a single key together, making it impossible to download a single event without downloading all events that came before it. On Nostr, you can download any dataset you want, because events aren't tied together. The cost of this is that you never know if you have all the events; the benefit is that content can be replicated more selectively across the network.
 
-This is actually how Twitter's architecture works - in order to scale, they maintain a network of interrelated caching nodes. When the average user posts content it normally gets sent immediately to read caches for all of their followers. But when a very popular account posts content, it's replicated to special "famous person" caches, distributing load without excessive duplication. Their system is also overprovisioned and able to respond to dynamic load, since news events may happen without warning.
+This is actually how Twitter's architecture works too — in order to scale, they maintain a network of interrelated caching nodes. When the average user posts content it normally gets sent immediately to read caches for all of their followers. But when a very popular account posts content, it's replicated to special "famous person" caches, distributing load without excessive duplication. Their system is also overprovisioned and able to respond to dynamic load, since news events may happen without warning.
 
-This is of course an over-simplified view of Twitter's [architecture](https://blog.x.com/engineering/en_us/topics/infrastructure/2017/the-infrastructure-behind-twitter-scale), but you can see how nostr relays might correspond to cache nodes. If Nostr is to scale, it must adopt a similar architecture. This requires not only the availability of enough nodes to support the network, but (arguably more importantly) heuristics for which relay to ask for a given event.
+This is of course an over-simplified view of Twitter's [architecture](https://blog.x.com/engineering/en_us/topics/infrastructure/2017/the-infrastructure-behind-twitter-scale), but you can see how nostr relays might correspond to cache nodes. If Nostr is to scale, it will naturally adopt a similar architecture. This requires not only the availability of enough nodes to support the network, but (arguably more importantly) heuristics for which relay to ask for a given event.
 
-In the past, naive content replication has been used to solve the routing problem. Instead of developing methods for relay selection, all content was sent to every relay. One project in particular called Blastr encouraged people to publish their events to a Blastr relay, which would then re-publish it to hundreds of other relays.
+In the past, naïve content replication has been used to solve the routing problem. Instead of developing methods for relay selection, all content was sent to every relay. One project in particular called Blastr encouraged people to publish their events to special write-proxy relays, which would then re-publish it to hundreds of other relays.
 
-This not only makes these "write proxies" a chokepoint for new content, but also is increasingly expensive as the amount of content being published to the network grows. With aggressive content replication, hundreds of duplicates of each event are foisted upon relays that may have no interest in storing them.
+This not only makes these relays a chokepoint for new content, but is also increasingly expensive as the amount of content being published to the network grows. With aggressive content replication, hundreds of duplicates of each event are foisted upon relays that may have no interest in storing them.
 
 This is not horizontal scaling; it's redundant vertical scaling. If every relay has to hold every event, small relays become impossible, centralizing the network in a few mega-relays which can afford to store and serve everything. This isn't really economical at any scale, but is outright prohibitive when databases reach a billion plus events.
 
