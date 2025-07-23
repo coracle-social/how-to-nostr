@@ -63,7 +63,7 @@ return [
     /**
      * A notice printed at the final page of a generated sample.
      */
-    'sample_notice' => 'If you enjoyed this book, consider <a href="https://github.com/coracle-social/building-nostr">donating</a>.',
+    'sample_notice' => 'If you enjoyed this book, consider <a href="https://geyser.fund/project/buildingnostr">donating</a>.',
 
     /**
      * CSS inline style for the page header.
