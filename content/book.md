@@ -1,4 +1,4 @@
-# Introduction: Nostr is for Builders
+## Introduction: Nostr is for Builders
 
 Nostr stands for "Notes and Other Stuff Transmitted by Relays." It was created as an answer to social media censorship by big tech companies, but has since become much more. Chances are, if you're reading this book you're already interested in Nostr development. Maybe it's the cryptographic identity that hooked you, or the network effect that application interoperability makes possible. Maybe it's the social media use cases, or the "other stuff" that brings you here.
 
@@ -14,11 +14,11 @@ This book will cover some of the basics in passing, but primarily as a stepping 
 
 Like Nostr itself, this book is not a comprehensive guide for how Nostr works (or ought to work). It is only a set of opinions, ideas, and guidelines for people who wish to create software for themselves or others — software that enriches its users rather than exploiting them.
 
-# 1. Complex Problems, Simple Solutions
+## 1. Complex Problems, Simple Solutions
 
-To begin with, I want to present a summary of how the profit motive of internet businesses creates a system of incentives which drives censorship and surveillance capitalism, hurting users and undermining corporations' own value propositions. Next, I'll describe what sort of solution Nostr actually is, and end with quick survey of how Nostr works at a high level — just so we're all on the same page. 
+To begin with, I want to present a summary of how the profit motive of internet businesses creates a system of incentives which drives censorship and surveillance capitalism, hurting users and undermining corporations' own value propositions. Next, I'll describe what sort of solution Nostr actually is, and end with quick survey of how Nostr works at a high level — just so we're all on the same page.
 
-## The Economics of Censorship
+### The Economics of Censorship
 
 Nostr was originally designed to be "censorship-resistant". But this is only one part of a bigger vision. Nostr is designed to *promote the digital freedoms of users* — things like privacy, access to information, anonymity, freedom of association, and [credible exit](https://newsletter.squishy.computer/p/credible-exit). Because of how cryptography was adopted (primarily by institutions) in the early days, the internet is no longer aligned with the interests of its users, but has largely been captured by "platforms".
 
@@ -46,13 +46,13 @@ The art of creating this moat seems to have been perfected. Facebook has been ar
 
 Very little of these companies' revenue comes from direct monetization. Instead, these big tech companies monetize their users by making them the product. Users have two things that platform owners can sell: their attention and their data. Platforms can only sell these things because they have access to them by virtue of being intermediaries. Platforms subsist by inserting themselves into private or public relationships in order to siphon off these intangible goods.
 
-This works because individuals don't believe their attention or data are worth anything. Seeing a billboard in your peripheral vision or having cameras record your license plate seem hardly comparable to paying a monthly fee for road use. In the same way, people don't count the cost of their attention or data when accessing the internet.
+This works because the majority of internet users either don't believe their attention or data are worth anything ("why do I need privacy? I have nothing to hide"), or feel helpless to opt out of the attention economy. Seeing a billboard in your peripheral vision or having cameras record your license plate seem hardly comparable to paying a monthly fee for road use. Whether you care about being recorded or not, you're still going to use the roads.
 
-And it's true: data and attention are not particularly valuable on an individual basis. But they're massively powerful in the aggregate. "Big data" is not mere information, but *the ability to predict patterns of behavior*, which can then be used at scale to manipulate people — to buy, believe, and act.
+It's true that data and attention are not particularly valuable on an individual basis. But they're massively powerful in the aggregate. "Big data" is not mere information, but *the ability to predict patterns of behavior*, which can then be used at scale to manipulate people — to buy, believe, and act.
 
 Advertising is not just about informing willing buyers about products and services, it's about conditioning people to act in predictable ways. Social engineering (like all engineering) is progressive and totalizing — unless restrained. The cost of giving away our attention and data to these internet intermediaries is, ultimately, the loss of our free will.
 
-## A Path Forward
+### A Path Forward
 
 This slide isn't inevitable. But it's also human nature — everyone wants something for nothing, and so internet users have voluntarily given up their free will to gain connectivity, entertainment, and efficiency.
 
@@ -62,9 +62,9 @@ My personal hope for Nostr is that it will aid in the restoration and cultivatio
 
 I want to emphasize that it is only *through people* that any of the internet's ills can be cured. Nostr is not a comprehensive system for restraining digital evil (such a thing would be itself totalitarian), but a way of allowing individual and community agency to be exercised in solving problems germane to individuals' and communities' own particular circumstances.
 
-## A Simple Protocol
+### A Simple Protocol
 
-Nostr is in many ways a "dumb" solution to a complex problem. Incentives, structures of power, and technological ecosystems are irreducibly complex, and impossible to understand in detail. But there are key architectural patterns that the modern internet is built on which enable and promote its particular dysfunctions — most importantly, the centrality of servers for both data storage and authentication. 
+Nostr is in many ways a "dumb" solution to a complex problem. Incentives, structures of power, and technological ecosystems are irreducibly complex, and impossible to understand in detail. But there are key architectural patterns that the modern internet is built on which enable and promote its particular dysfunctions — most importantly, the centrality of servers for both data storage and authentication.
 
 Instead of using server-based authentication, Nostr leverages cryptography in order reduce the role of servers from powerful hubs to disposable, user-aligned repositories. To join the Nostr network, all a user has to do is unilaterally generate a `secp256k1` cryptographic key pair.
 
@@ -82,7 +82,7 @@ In terms of the CAP theorem, Nostr has no consistency guarantees, but plenty of 
 
 To recap: Nostr combines cryptographic identities, interoperable data storage, and an open ecosystem of content types to create a system where neither user identity nor user data can be captured by a single entity. This subverts the central role that servers have in the modern internet, placing users at the center, rather than corporations.
 
-# 2. Events and Kinds
+## 2. Events and Kinds
 
 The term "NIP" stands for "Nostr Implementation Possibility", a term the community uses to refer to Nostr protocol specifications. These specs might describe content types, behavior for relays, expectations for clients, or sub-protocols for other related services like signers, wallets, and "data vending machines" (services which perform arbitrary computation and expose an event-based interface).
 
@@ -100,7 +100,7 @@ Right now, the best place to collaborate is on the [github repository](https://g
 
 With that in mind, let's get into events — the "what" of Nostr.
 
-## A Single Data Type
+### A Single Data Type
 
 All data on Nostr (with very few exceptions) is contained in "events". Here's an example of an event:
 
@@ -131,7 +131,7 @@ Here's what those fields mean:
 
 The core of the event is the cryptographic properties: `id`, `pubkey`, and `sig`. These three properties make it possible to verify the event author, and refer to the event by content hash rather than location. We'll talk more about how to work with cryptographic identities later, but it's hard to understate just how important these properties are. For now though, I want to get into a different topic: data modeling.
 
-## Numbers, not Names
+### Numbers, not Names
 
 Every event has a "kind," which is a 16-bit integer. An event's `kind` determines what that event means (it's "content type") and how it should be interpreted. Using numbers instead of names is an unconventional choice, but it has certain benefits.
 
@@ -161,7 +161,7 @@ The same word might vary from place to place. You might have the same word with 
 
 But because of this design choice, Nostr is a very humble protocol - it is little more than an empty shell which users can then fill with content types that solve their use cases.
 
-## More Kinds, Less Ambiguity
+### More Kinds, Less Ambiguity
 
 This isn't to say that there aren't conventions that should be followed when designing new content types.
 
@@ -183,7 +183,7 @@ Some data might make sense to group together in a single event, for example kind
 
 When choosing whether to create a new kind or adopt an existing one, it's important to understand that the "one way" rule is only an *ideal*, and can still be violated if design goals vary, or an existing spec is broken in some crucial way. Just be prepared to defend your divergence from convention if you want other people to migrate to the new way of doing things.
 
-## Time is Hard
+### Time is Hard
 
 There are an incredible number of [falsehoods programmers believe about time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). Dealing with time is inherently difficult, especially in a distributed system which has no single time-stamping authority.
 
@@ -197,7 +197,7 @@ A possible solution to this is to use something like vector clocks where every p
 
 Dealing with time in a distributed system is frequently use-case dependent. By providing a very weak mechanism for working with time, Nostr leaves the door open to use-case-specific strategies for working with time.
 
-## Content and Tags
+### Content and Tags
 
 Finally, we have `content`, and `tags`. An event's content is generally a human-readable payload, while tags are structured data.
 
@@ -227,7 +227,7 @@ The benefit here is that new information about the event ID can be added associa
 
 This is the same trade-off as exists in programming languages when choosing named vs positional arguments (for example python's `*` construct). Named arguments make it a lot easier to maintain backwards compatibility as a function's signature evolves.
 
-## Behavior and Data
+### Behavior and Data
 
 Tags can fall into one of three categories: data, filters, and behavior. These three things are often intermingled and hard to differentiate. This terminology is my own, and not reflected in any specifications or event structure, but I think it's useful for understanding how different design concerns interact.
 
@@ -269,7 +269,7 @@ This problem could have been solved by separating data, filter, and behavior tag
 
 Here's a simple heuristic for dealing with overloaded tags: when resolving the meaning of a tag, always first look at the specifications for the event's kind, which has the right (being the most specific spec) to override any general tag behavior. Only secondarily should you look at specifications that define tags in a broad sense.
 
-## Behavior and Data Part Deux
+### Behavior and Data Part Deux
 
 Another example of this data/behavior design flaw is the idea of event kind ranges.
 
@@ -295,7 +295,7 @@ This behavior really should have belonged in behavior tags, which would allow us
 
 But I digress. We might get these extensions in the future, but for now we have to work with the limitations of kind ranges. My point is, when you're defining new event types, you should have a slight bias towards regular, non-replaceable events because they don't break referential transparency.
 
-## Deleting Events
+### Deleting Events
 
 One final bit of behavior that's worth mentioning in this context is deletion requests. These are `kind 5`events that can either `e` tag an event's ID or `a` tag an event's address. Relays receiving a `kind 5` event are expected to delete all matching events — provided the author is the same.
 
@@ -303,7 +303,7 @@ It's important that these be considered deletion *requests*, not actual deletion
 
 This is the thing about signed data. Once it's published, there's no way to un-sign or un-publish the data. Anyone who has a copy can keep it. This is great for keeping public figures accountable for their words and actions, but not great for taking something down that shouldn't have been posted. Care has to be taken when using signed data. This is true of unsigned data as well, which can always be screenshotted or copied, but signatures remove deniability. This is a good trade-off for public broadcast social media, but it is something to keep in mind.
 
-## Filtering Events
+### Filtering Events
 
 Another concept that is closely related to events is that of filters, which are a data structure that allows clients to request specific events from relays. A filter is a dictionary with one or more of the following fields:
 
@@ -321,7 +321,7 @@ There are some other less common filter extensions:
 - An additional `search` property is defined by [NIP 50](https://github.com/nostr-protocol/nips/blob/master/50.md) and implemented by some relays
 - Negative matches have been proposed, but rejected because of the impact they would have on relay performance
 
-## A Light Touch
+### A Light Touch
 
 Dealing with other people's signed events is always going to require some adversarial thinking. Events can be malformed, either from a buggy implementation or from someone trying to attack software applications. A `p` tag might have an invalid or missing value, or a relay hint that is trying to spy on users. Event `content` might include HTML injection attacks, or illegal content.
 
@@ -359,7 +359,7 @@ You can see that the original event is passed through to `writeProfile`, allowin
 
 This adds a certain amount of additional effort to implementations, but is important for avoiding disruption of user experience.
 
-## Backwards Compatibility
+### Backwards Compatibility
 
 Backwards incompatibility is one of the big problems of spec design. When breaking backwards compatibility, not only do you break other existing implementations, but in a system where events can't be migrated to the new format you also break all historical data, even if it was published by your own app.
 
@@ -373,13 +373,13 @@ When breaking backwards compatibility however, it's best to create an entirely n
 
 Over time, Nostr protocol development has gotten increasingly conservative. As use cases proliferate, it becomes more difficult to get feedback on new data formats. As implementations proliferate, it becomes more difficult to advocate for breaking changes. Nostr specifications are not sacred, but their effectiveness relies almost entirely on interoperability. Maintaining compatibility requires conscientiousness, communication, and contributions to other projects - there's no better way to get people to listen to you than writing code to improve their implementation.
 
-# Chapter 3: Signatures and Identity
+## 3. Signatures and Identity
 
 Now that we've gotten some of the boring stuff out of the way, we can get into some of the meat of what makes Nostr special. While Nostr makes things marginally more exciting by virtue of its design choices, data modeling is common to pretty much every form of software. What isn't as commonplace is Nostr's use of cryptography.
 
 Nostr is built on the same elliptic curve that Bitcoin is built on: secp256k1. Asymmetric cryptography enables all kinds of neat things from digital signatures, to encryption, to secret sharing, and even distributed signature schemes. This chapter isn't a complete catalog of what we might be able to accomplish with it, but will instead focus on how Nostr uses it and why it matters.
 
-## Information Wants to Be Free
+### Information Wants to Be Free
 
 Digital signatures are essential to making Nostr work. The goal of Nostr is to break down walled gardens by subverting one of their key value propositions: content authentication. Or, in other words, the ability to know that a particular person said a particular thing.
 
@@ -391,7 +391,7 @@ What signed data gives us is the ability to know that something is true without 
 
 A Nostr event can thus be sent over an untrusted communication channel without the recipient losing the ability to know that it was me who signed it. As long as they know my public key, I can email a Nostr event, I can send a Nostr event over a peer-to-peer communication or over Bluetooth or over the LAN, or I can print it up and send it by mail. No intermediary can stop me without securing a monopoly on my communication.
 
-## Publicity Technology
+### Publicity Technology
 
 The business model that fuels today's social media platforms is predicated on the capture of user data for their exclusive monetization. The user has become the product. Our data is used in a focused way to create targeted advertisements, or in the aggregate to understand and anticipate user behavior.
 
@@ -409,7 +409,7 @@ When you create an event and you send it to untrusted custodians (particularly i
 
 This is suitable for Twitter-like use cases (although user privacy is a concern even in a broadcast social media context), but always has to be considered when building products on Nostr. For users, it's best to use a VPN and Tor in combination with Nostr if you're concerned about privacy. Even so, in the aggregate signed data can still be collected and used to understand both individual users and entire social clusters.
 
-## Dis-intermediating Data
+### Dis-intermediating Data
 
 With that in mind, signed data does help reduce the capture of user attention by dis-intermediating content delivery. The current business model of social media platforms is predicated on the attention users give the platform, which is maximized by designs which stimulate "engagement", the creation and consumption of digital content.
 
@@ -427,7 +427,7 @@ Social media companies can still exist in a world of signed data, but they will 
 
 Whether open source software wins out or for-profit companies start building on Nostr, signed data weakens platforms' hold on their users and realigns the interests of social media platforms with those of their users. And while I think there's still room for skepticism about the effects of social media in general on people and communities, removing lock-in fixes a lot of existing perverse incentives in the system.
 
-## Your Very Own Number
+### Your Very Own Number
 
 On almost every digital platform in existence, identities are the property of the platform, not of the user. In most cases, a user identity is not actually the user's email, phone number, or a username, but an ID that's stored in a database. This number is generated by the platform when a user registers, and belongs to the platform, which can change this number, redefine it, give it away, or delete it at any time and with impunity.
 
@@ -443,7 +443,7 @@ Secret keys can also be generated out of thin air, giving you as many identities
 
 This of course requires users to be responsible and understand the privacy trade-offs of reusing their keys, just like it requires users to know not to reuse their passwords. But user education is a tractable problem, while digital freedom is impossible without cryptographic identities. Users can be exclusively and finally in control of their identity.
 
-## Agency and Identity
+### Agency and Identity
 
 Cryptographic identities attack walled gardens from multiple directions at once. Because data is signed and verifiable, platforms are no longer necessary for tracing the provenance of a given message or social media post.
 
@@ -453,7 +453,7 @@ Cryptographic identities are more private than claims that are shared with custo
 
 In contrast, when using asymmetric key pairs the only thing that can leak from the third party database is your public key, since your private key never leaves your possession. Of course there's a whole art to keeping your private key safe, which we'll get into later. But even without sophisticated key management, cryptographic identities drastically decrease users' vulnerability to identity theft and phishing attacks.
 
-## Identity Webs
+### Identity Webs
 
 Identity *a la carte* is not the end of the story though. Cryptographic identities can free data from custodians, but they can also be referenced *by* that data, making it possible to assign meaning to identities themselves. A simple example of this is a "mention", which allows someone to be notified about a conversation and engage with it. The same goes for direct messages, payments, friends, follows, and more. Since each reference of a public key is also signed, relationships between keys can begin to form. This is known informally as "webs of trust", although the word "trust" might overstate how reliable these connections are. A better term might be "identity webs".
 
@@ -477,7 +477,7 @@ Digital representation of social trust is inherently weaker than authentic socia
 
 However, there are additional affordances that Nostr provides which can supplement the trust graph. Synthetic attestations can be generated on behalf of new users by services with an established reputation by reviewing government-issued identification (or by asking for a picture of the person with a shoe on their head). Another method is "proof-of-work", originally invented to frustrate email spam. [NIP 13](https://github.com/nostr-protocol/nips/blob/master/13.md) specifies how a given event can demonstrate that a certain amount of computational work went into its creation. Both of these methods have their limitations (identity theft, AI-generated imagery, and GPU farms can all bypass these measures if the incentive is valuable enough), but they can factor into a more robust trust profile.
 
-## Holding Keys
+### Holding Keys
 
 Cryptographic identity promises a lot, but all of its benefits are predicated on users being able to securely and conveniently hold their private key, which is a big assumption. Over a decade of research has gone into building key storage solutions for Bitcoin wallets. Many of the the complexities and trade-offs involved in those design decisions apply to Nostr as well.
 
@@ -505,11 +505,11 @@ One other common pattern worth mentioning is seed words. Seed words are great fo
 
 But on Nostr keys are almost always stored on an internet-connected signing device, making them vulnerable in ways bitcoin keys aren't. Seed words only useful for physically backing up Nostr keys that exist only as distributed shards. This can make sense for advanced or paranoid users, but is not really relevant to onboarding new users. In most cases, putting your key in a password manager (optionally encrypted) is enough.
 
-# Chapter 4: Relays are Repositories
+## 4. Relays are Repositories
 
 Thus far we've focused mostly on "Nostr as data." But data modeling, signatures, and identity are really only half of the story. Nostr is much more than a data format — what is much more interesting is its network architecture.
 
-## Why WebSockets
+### Why WebSockets
 
 Many cutting-edge decentralized protocols are "peer-to-peer," which means they attempt to repurpose the architecture of the internet to facilitate direct communication between peers. Peer-to-peer technology is really neat, but it's also hard to get right because it works against the grain of the internet as it has been used for the last 30 years.
 
@@ -537,7 +537,7 @@ This technique was pioneered by Secure Scuttlebutt (SSB), which started with P2P
 
 In terms of transport protocol, Nostr opted for "easy" by default. But this dimension of the relay network is secondary to the network architecture itself, which adheres much more closely to Hickey's idea of "simplicity". So, setting aside the transport questions for now, let's get into what relays actually do.
 
-## Multi-Master
+### Multi-Master
 
 A key aspect of Nostr's architecture is its reliance on more than one relay for storing data. As we mentioned in the previous chapter, relays can't falsify anything because your data is signed. They don't have the ability to lock users in or create a data moat. What they do have, however, is the ability to censor or delete user data.
 
@@ -549,7 +549,7 @@ For the average social media user, three to five popular relays is generally eno
 
 This ignores the problem of which relays should be used to store what content. Solving this problem is the key to making Nostr's multi-master architecture work; naïve replicas result in either excessive duplication of content across all relays, or persistent failure to locate content. We'll get to that soon, but first I want to define what a relay actually is.
 
-## Functional Relays
+### Functional Relays
 
 Relays are simple repositories of events. They hold a bunch of events in some database or other and grant access to those events using the Nostr WebSocket protocol. This protocol involves sending JSON-encoded messages over WebSockets using just a few core commands:
 
@@ -582,7 +582,7 @@ One final thing to note in this context is [Negentropy](https://github.com/nostr
 
 This does a lot to facilitate content replication across relays without burning through resources, which in turn makes it possible for the network to re-organize itself to align with expectations about where a given event "should" be stored.
 
-## Replication and Routing
+### Replication and Routing
 
 The Nostr network is highly partition tolerant, unlike (for example) Secure Scuttlebutt, which links all events from a single key together, making it impossible to download a single event without downloading all events that came before it. On Nostr, you can download any dataset you want, because events aren't tied together. The cost of this is that you never know if you have all the events; the benefit is that content can be replicated more selectively across the network.
 
@@ -607,13 +607,13 @@ In order to solve this problem, we must have rules for:
 
 In the latter case there is less information available for solving the routing problem, which means multiple heuristics might be relevant for a given event, depending on how it might be queried.
 
-## The Outbox Model And Friends
+### The Outbox Model And Friends
 
-This is where the "Outbox Model" comes in. The Outbox model combines cryptographic identity with selective content replication, and was the first heuristic defined for solving the routing problem, but is certainly not the only one - other heuristics have emerged over time as the same problem cropped up in different contexts. At the end of this section, I'll enumerate several variations and their accompanying heuristics.
+This is where the "Outbox Model" comes in. The Outbox model combines cryptographic identity with selective content replication, and was the first heuristic defined for solving the routing problem, but is certainly not the only one — other heuristics have emerged over time as the same problem cropped up in different contexts.
 
-For now, I want to focus in some detail on the Outbox in particular, since understanding it is crucial for keeping decentralized, and the heuristics it defines are paradigmatic for the rest.
+At the end of this section, I'll enumerate a few other relay selection scenarios and their accompanying heuristics. For now, I want to focus in some detail on the Outbox in particular, since understanding it is crucial for keeping Nostr decentralized, and the heuristics it defines are paradigmatic for the rest.
 
-In the early days, nostr was used primarily for microblogging, and so NIP 65 was created in order to solve this problem *in that specific context*. NIP 65 therefore allows users to publish a `kind 10002` "relay selections" event, "to advertise relays where the user generally writes to".
+In the early days, Nostr was used primarily for microblogging (and to a large extent still is), and so [NIP 65](https://github.com/nostr-protocol/nips/blob/master/65.md) was created in order to solve this problem *in that specific context*. NIP 65 allows users to publish a `kind 10002` "relay selections" event "to advertise relays where the user generally writes to".
 
 By publishing their relay selections, users are declaring to the rest of the network that events they *create for public consumption* can be found there. This covers things like blog posts, microblogging events, and user profiles.
 
@@ -621,19 +621,19 @@ So, in order to find a given user's blog posts (for example), I first have to lo
 
 This is a very simple heuristic on its own, but it's important to be clear that it is not sufficient for every use case. The term "outbox model" is often used as a way to refer to the general idea of heuristics for relay selection, but in fact the outbox model is only one such heuristic, and is relevant only in the particular (though very common) context of author-based retrieval of public social media content.
 
-The outbox heuristic is not sufficient to solve the routing problem in general for two reasons. First, there are many notes that should not be posted to user outboxes - for example, a 22242 auth response, or a chat message posted to a NIP 29 group. Second, any event may be retrieved based on some other criteria.
+The outbox heuristic is not sufficient to solve the routing problem in general for two reasons. First, there are many notes that should not be posted to user outboxes - for example, a `kind 22242` auth response, or a chat message posted to a [NIP 29](https://github.com/nostr-protocol/nips/blob/master/29.md) group. Second, any event may be retrieved based on criteria other than event author.
 
-A second heuristic, also defined by NIP 65 is the "inbox model", which is intended to make social media posts discoverable based on users @-mentioned in the event. This heuristic is distinct from, but complementary to, the outbox heuristic.
+A second heuristic, also defined by [NIP 65](https://github.com/nostr-protocol/nips/blob/master/65.md) is the "inbox model", which is intended to make social media posts discoverable based on users @-mentioned in the event. This heuristic is distinct from, but complementary to, the outbox heuristic.
 
-For example, a note by Alice which mentions Bob should be posted both to Alice's outbox relays, as well as to Bob's inbox relays. To retrieve Alices's replies, we would use the outbox heuristic based on her `kind 10002` event - but if we want to retrieve Bob's mentions, we would use the inbox heuristic based on his `kind 10002` event.
+For example, a note by Alice which mentions Bob should be posted both to Alice's outbox relays, as well as to Bob's inbox relays. To retrieve Alices's replies, we would use the outbox heuristic based on her `kind 10002` event — but if we want to retrieve Bob's mentions, we would use the inbox heuristic based on his `kind 10002` event.
 
-Similarly, when posting to a NIP-72 community, you may or may not choose to also post an event to inbox or outbox relays, depending on how private you want the event to be. But in addition, it's important to post events to the locations defined by the group definition's `relays` tag. The reason for this is simple: when fetching a list of community posts, searching the outboxes of all the members of the community may not be feasible.
+Similarly, when posting to a [NIP 72](https://github.com/nostr-protocol/nips/blob/master/72.md) community, you may or may not choose to also post an event to inbox or outbox relays, depending on how private you want the event to be. But in addition, it's important to post events to the locations defined by the group definition's `relays` tag. The reason for this is simple: when fetching a list of community posts, searching the outboxes of all the members of the community may not be feasible.
 
 Posting to certain relays based on all applicable heuristics can be thought of as equivalent to creating multiple indexes on a database table, each to support a different query scenario. An index connects a query condition which supports a particular use case with where on disk matching records are stored. In the same way, a routing heuristic connects a filter that might be constructed to support a particular use case with the relay where matching events are stored.
 
-Just like database indexes, relay selection heuristics are generally additive, and should all be applied when relevant so that the event in question can be found using the heuristic most appropriate to a given context. The exception to this is when some form of access control is desired - i.e., that the event *not* be discoverable using a particular heuristic.
+Just like database indexes, relay selection heuristics are generally additive, and should all be applied when relevant so that the event in question can be found using the heuristic most appropriate to a given context. The exception to this is when some form of access control is desired — i.e., that the event *not* be discoverable using a particular heuristic.
 
-An example of this is content posted to NIP 29 groups. Because access control is part of the purpose of the NIP 29 spec, it would be a violation of the user's intentions to publish an event posted to a group according to the `outbox` heuristic - doing so would "leak" content which was intended to be protected.
+An example of this is content posted to [NIP 29](https://github.com/nostr-protocol/nips/blob/master/29.md) groups. Because access control is part of the purpose of the [NIP 29](https://github.com/nostr-protocol/nips/blob/master/29.md) spec, it would be a violation of the user's intentions to publish an event posted to a group according to the `outbox` heuristic — doing so would "leak" content which was intended to be protected.
 
 This means, of course, that the usual `inbox` heuristic is not available for notifying users when they are mentioned in a group context. This might be considered a feature or a bug depending on your perspective; this is one of the tradeoffs involved in a system without a single arbiter governing access to content.
 
@@ -643,42 +643,58 @@ Needless to say, this can get very complex. This is a natural result of the open
 
 Because the routing problem is both complex and important, let me give a few more example scenarios.
 
-- NIP-17 direct messages should be sent to the recipient's `kind 10050` direct message inbox relay. Direct messages are encrypted to only one private key, which means each message gets sent multiple times - once to each user.
-- The `outbox` relays NIP 47 zap receipts are sent to should be those of the zap *request* author, not the zap *receipt* author, since the wallet is only acting on behalf of the person sending the zap. In some cases though, it might be best to put the zap on an access controlled relay (for example, if you're zapping within a community group).
-- Some events, such as NIP 72's `kind 34550` group metadata events, define which relays related events should be posted to using a `relays` tag.
+- [NIP 17](https://github.com/nostr-protocol/nips/blob/master/17.md) direct messages should be sent to the recipient's `kind 10050` direct message inbox relay. Direct messages are encrypted to only one private key, which means each message gets sent multiple times - once to each user.
+- The `outbox` relays [NIP 47](https://github.com/nostr-protocol/nips/blob/master/47.md) zap receipts are sent to should be those of the zap *request* author, not the zap *receipt* author, since the wallet is only acting on behalf of the person sending the zap. In some cases though, it might be best to put the zap on an access controlled relay (for example, if you're zapping within a community group).
+- Some events, such as [NIP 72](https://github.com/nostr-protocol/nips/blob/master/72.md)'s `kind 34550` group metadata events, define which relays related events should be posted to using a `relays` tag.
 
-Which relay an event is posted to depends primarily on how that event is to be read. Events need to be discoverable, which means readers need to be able to anticipate where the event is stored. However, there are some kinds which don't provide any of this information to someone wishing to request them - for example, `kind 37515` geocache listings, or any event with a `t` tag representing a social media topic.
+Which relay an event is posted to depends primarily on *how that event is to be read*. Events need to be discoverable, which means readers need to be able to anticipate where the event is stored. However, there are some kinds which don't provide any of this information to someone wishing to request them — for example, `kind 37515` geocache listings, or any event with a `t` tag representing a social media topic.
 
-In both cases, events belong somewhere that isn't currently well-defined by the protocol. The lack of a path from bootstrapping relays to content discovery is an flaw in the design of certain NIPs. Currently, this is solved by asking users to manually select the relays where they want to look for geocache listings or topics. This can be a perfectly valid heuristic on its own, but will necessarily result either in centralization (by clients who hard-code certain relays), or missed notes (since the ability to retrieve matching events depends on something between randomness and brute force). Additional signaling may be implemented to solve these problems, for example relays may advertise their support for certain `t` tags, or for geocache listings in a given region. In order for this to work though, the heuristics have to be defined and followed.
+In both cases, events belong somewhere that isn't currently well-defined by the protocol. Currently, this is solved by asking users to manually select the relays where they want to look for geocache listings or topics. This can be a perfectly valid heuristic on its own, but will necessarily result either in centralization (by clients who hard-code certain relays), or missed notes (since the ability to retrieve matching events depends on something between randomness and brute force).
 
-## Bootstrapping
+Additional signaling may be implemented to solve these problems — for example, relays may advertise their support for certain `t` tags, or for geocache listings in a given region based on `g` tag. In order for this to work though, heuristics have to be defined and followed — NIPs that don't define relay selection heuristics for their use cases are inherently flawed, since they ignore a vital part of Nostr's architecture.
+
+### Bootstrapping
 
 One event kind that I've thus far avoided introducing a heuristic for is `kind 10002` relay selections. If these determine where the rest of a user's public notes live, what determines where they belong? This is the classic bootstrapping problem of networks, for which you need a heuristic of a different kind.
 
 In other words, you have to start somewhere. It's impossible to access a "network" without accessing particular nodes. When not yet connected, nodes have to be selected by some heuristic external to the network itself.
 
-The most common way to solve this problem is to hard-code "indexer" or "default" relays in implementations, from which point other relays can be discovered using NIP 65, NIP 66, or relay hints. Alternatively, a distributed hash table (DHT) might be used to store events related to relay selection, improving censorship- and sybil-resistance.
+The most common way to solve this problem is to hard-code "indexer" or "default" relays in implementations, from which point other relays can be discovered using [NIP 65](https://github.com/nostr-protocol/nips/blob/master/65.md), [NIP 66](https://github.com/nostr-protocol/nips/blob/master/66.md), or relay hints. Alternatively, a distributed hash table (DHT) might be used to store events related to relay selection, improving censorship- and sybil-resistance.
 
-In either case, events need to be stored in one of these few starting points in order to be discoverable. If they can't be found, none of the events they help locate can be found either (except accidentally).
+In either case, events that form the basis for relay selection heuristics need to be stored in one of these few starting points in order to be discoverable. If they can't be found, none of the events they help locate can be found either (except accidentally).
 
 In practice, hard-coded lists of bootstrapping relays work pretty well for the same reason that a small amount of redundancy in user relay selections can dramatically reduce the risk of censorship. Because hard-coded indexer relays are selected by implementation authors (or by users themselves), they're easy to swap out if any of them become censorious or go offline. This is strictly worse than using a DHT, but the strategies are not mutually exclusive. As time goes on, I expect a DHT-based solution to the bootstrap problem to be introduced as a progressive enhancement.
 
 One difficulty with the bootstrap relay model, however, is that different types of bootstrapping events are needed to support different relay selection heuristics. The outbox/inbox heuristics are defined by `kind 10002`, but topic-, location-, community-, or language-based heuristics aren't, and any relay discovery events that support them will certainly be replicated less aggressively.
 
-The solution to this is to take a step backward, and instead of focusing on `kind 10002` as the entry point to the network, switch to `kind 30166` relay discovery events for bootstrapping. Of course, since relay discovery events can be published by anyone, and aren't necessarily related to the user's web of trust, another heuristic has to be used to bootstrap trust - both indexer relays and indexer pubkeys might be hardcoded by implementation developers in order to avoid sybil attacks by untrusted relay monitors, or this trust might be delegated to the indexer relay operators. In either case, the user is delegating bootstrap relay selection to their client's developer.
+One possible solution to this would be to take a step backward, and instead of relying exclusively on `kind 10002` as the entry point to the network, switch to [NIP 66](https://github.com/nostr-protocol/nips/blob/master/66.md) `kind 30166` relay discovery events for bootstrapping. However, since relay discovery events can be published by anyone, and aren't necessarily related to the user's web of trust, another heuristic has to be used to bootstrap trust.
 
-Let me give an example to make this more concrete. Suppose you want to find relays that store `kind 21` video events about cats. Beginning with 2-5 semi-trusted relays which the client developer has chosen to curate relay discovery events, the client can first send a request for relay discovery events tagged with the desired topics, and which support the desired event kinds:
+This illustrates the fact that bootstrapping is not just a physical networking problem, but a trust problem as well. `kind 3` follows is not the only way to do this, but when choosing `kind 30166` events, some heuristic has to be used to assess relay monitor trustworthiness — otherwise, malicious monitors could sybil-attack relay recommendations, directing users to censored or otherwise malicious relays.
+
+Currently kind `30166` events are published exclusively by "relay monitors", but there's no reason regular users couldn't also create them. This would make it possible for people within a user's web of trust to recommend relays for the purpose of discovering events by kind and optionally, indexable tags. Relays discovered this way might be used for finding events explicitly associated with relay selection, like `kind 10002` or `kind 10050` that can then be factored into other relay discovery heuristics, or they may directly provide the content themselves (for example, relays that curate `kind 31990` application handler events).
+
+The main problem with this is that regular users are either unlikely to be competent to make these recommendations, or interested in taking the time since there is no immediate incentive for them to do so. [NIP 51](https://github.com/nostr-protocol/nips/blob/master/51.md) lists partially solve this, since they exist primarily for user convenience, but they're neither comprehensive nor generic.
+
+But assuming we can find a way to get users to publish these (either by solving the incentive problem or by having clients publish them on the user's behalf based on user activity), let me give a concrete example to illustrate what I mean.
+
+Suppose you want to find relays that curate `kind 21` video events about cats by anyone on the network. Assuming the client has already loaded all `kind 10002` relays for the user's social graph, the client would first request relay recommendation events from the user's network targeting cat videos:
 
 ```json
-["REQ", "subid", {kinds: [30166], "#t": ["cats", "cat", "catstr"], "#k": ["21"]}]
+["REQ", "subid", {
+  "kinds": [30166],
+  "authors": ["<user's follow list>"],
+  "#t": ["cats", "cat", "catstr"],
+  "#k": ["21"]
+}]
 ["EVENT", "subid", {
   "kind": 30166,
   "created_at": 1722173222,
-  "content": "{}",
+  "content": "This relay has some really funny cat-related content on it.",
   "tags": [
-    ["d", "wss://somerelay.abc/"],
+    ["r", "wss://relay.example.com/"],
     ["t", "cats"],
-    ["k", "21"],
+    ["k", "1"],
+    ["k", "21"]
   ],
   "pubkey": "<pubkey>",
   "sig": "<signature>",
@@ -686,21 +702,15 @@ Let me give an example to make this more concrete. Suppose you want to find rela
 }]
 ```
 
-The client can then apply additional heuristics (like relay reviews for example) to these results, then send a request for the desired content to each relay url advertised.
+Because these events are loaded from the user's social graph, there is a high level of confidence that these recommendations are genuine (if not necessarily current or reliable). The user's client can then request cat videos from these relays and show them to the user. In this way, the user's social graph is leveraged *indirectly* for discovering content not authored specifically by people the user follows.
 
-The same heuristic can be used for any event kind, provided at least one of your bootstrap relays is reliable. Hard-coding relays isn't ideal, certainly, but with these limitations in mind, it can be "good enough", consistent with the nostr ethos.
-
-The downfall of all of this is to what extent developers are interested in supporting the decentralization of the nostr network. Hard coding a relay to read from and publish to is easy. Hard coding 2-5 bootstrap relays from which relay discovery events can be fetched for the purpose of finding relays hosting use-case-specific index events in order to find the desired content... is hard.
-
-But that's why I'm writing this book. Decentralization is not easy - but it has massive payoffs if developers go to the trouble of building robust, principled implementations of the protocol.
-
-## Relay Hints
+### Relay Hints
 
 Something that frequently gets confused with heuristics for relay selection is relay hints. Relay hints are baked into certain events, particularly where there isn't sufficient information otherwise available for fetching a related event.
 
-An example of this is `kind 1111` comments, which always exist in relation to another event. In general, it e-tags or a-tags the parent event and provides an event ID or address. An address contains the author's pubkey, which allows for looking up the author's outbox, then asking for the event in question. But an event ID tells you nothing about where to find it.
+An example of this is `kind 1111` comments, which always exist in relation to another event. In general, it e-tags or a-tags the parent event and provides an event ID or address. An address contains the author's pubkey, which allows for looking up the author's outbox. But an event `id` tells you nothing about where to find it.
 
-Relay hints were designed to solve this problem. By adding a relay URL to the tag containing the event ID, the user now has at least some idea of where to look for it. Unfortunately, for the same reason that link rot happens across the internet, these relay URLs are not 100% reliable.
+Relay hints were designed to solve this problem. By adding a relay URL to the tag containing the event `id`, the user now has at least some idea of where to look for it. Unfortunately, for the same reason that link rot happens across the internet, these relay URLs are not 100% reliable.
 
 As a result, pubkey hints have been added as well. A public key is much more durable because as long as you can find the outbox relay selection for that public key, the user's relay selections can change, relays can go offline and come online, and there's still a well-defined path towards discovering the event in question.
 
@@ -708,13 +718,13 @@ Together, relay and pubkey hints comprise an additional heuristic which can be u
 
 Relay hints have another function though, which is to force relays to federate. If an event including a relay hint is published to a censorious relay, the hint cannot be removed without invalidating the event's signature. As a result, relays are forced to decide either to reject these events entirely, or accept them and thereby advertise someone they would otherwise choose to censor.
 
-This make is possible for a user's events to still be discoverable across the network, even their public key is banned from a significant portion of popular relays. Clients can take advantage of this dynamic in order to heal the network, prompting users to update their relay selections to route around censorship.
+This make is possible for a user's events to still be discoverable across the network, even if they are banned from a significant portion of popular relays. Clients can take advantage of this dynamic in order to heal the network, prompting users to update their relay selections to route around censorship.
 
-If this all seems very abstract, take a look at https://how-nostr-works.pages.dev/#/pathological - this page includes several animations that illustrate how relay hints help keep the network healthy.
+If this all seems very abstract, take a look at https://how-nostr-works.pages.dev/#/pathological — this page includes several animations that illustrate how relay hints help keep the network healthy.
 
-Properly implementing robust relay selections across the many heuristics, bootstrap mechanisms, and relay hints is obviously complex, and could be made simpler if re-designed from scratch. But solving this problem is essential to making Nostr censorship resistant, and because of the many different use cases that Nostr supports with its open data model an unlimited number of heuristics may be appropriate.
+Properly implementing robust relay selections across the many heuristics, bootstrap mechanisms, and relay hints is obviously complex, and could be made simpler if re-designed from scratch. But solving this problem is essential to making Nostr censorship resistant, and because of the many different use cases that Nostr supports with its open data model, an unlimited number of heuristics may be appropriate.
 
-## Content Migration
+### Content Migration
 
 There's one more wrinkle to relay selections which needs to be addressed before we're done here. What happens if the relays selected by a given heuristic change over time? This most commonly happens when a user changes his outbox relays, but it can occur for any other relay selection heuristic. Normally this problem is ignored or overlooked in implementations, but because nostr relays are not intended to be trusted either now or perpetually, having a story for how to manage this problem is an essential part of any complete implementation.
 
@@ -722,9 +732,9 @@ Luckily, the solution is actually very simple in principle. Because events are s
 
 In an open system like Nostr, no one can force anyone else to do the right thing, which means that the smooth functioning of the system depends on incentive structures. In order for an event to be discoverable, heuristics for locating it need to be anticipated by someone. But who exactly is responsible for sending events to the right place? The obvious answer would be the event author, but that's not actually correct. The person responsible for putting events in the correct place is the person *who wants the event to be discoverable in that place*.
 
-This means that the onus is on users (and by extension their clients) to choose good outbox relays and publish their events to them. Group admins are responsible for properly configuring infrastructure to accept the correct relays and make them available. And people that curate topical data are responsible either to scrape the network or incentivize publishing to their relays.
+This means that the onus is on users (and by extension their clients) to choose good outbox relays and publish their events to them. Group admins are responsible for properly configuring infrastructure to accept the correct events and make them available. And people that curate topical data are responsible either to scrape the network or incentivize publishing to their relays.
 
-Similarly, it is the responsibility of anyone that changes the result of relay selection heuristics to synchronize events to the new relay. If a relay changes his inbox relay, he should copy all events that mention him to the new location. If a group switches relays, group messages should be copied by the admin. If a new indexer relay gets stood up, the admin should copy relevant events from the network.
+Similarly, it is the responsibility of anyone that changes the result of relay selection heuristics to synchronize events to the new relay. If a user changes his inbox relay, he should copy all events that mention him to the new location. If a group switches relays, group messages should be copied by the admin. If a new indexer relay gets stood up, the admin should copy relevant events from the network.
 
 Here's a simple example of what happens if data isn't properly synchronized when relay selections change:
 
@@ -733,49 +743,51 @@ Here's a simple example of what happens if data isn't properly synchronized when
 - Alice updates her `kind 10002` with relay B as her `write` relay
 - Bob fetches her `kind 10002`, requests Alice's `kind 1`s from relay B, and finds nothing
 
-Bob correctly followed the outbox heuristic, but failed to find content that does actuall exist on the network. In essence, Alice lied to Bob - she published a claim that her notes were available on relay B, when in fact they weren't. If she had copied her `kind 1` event from relay A to relay B, however, Bob's query would have been successful.
+Bob correctly followed the outbox heuristic, but failed to find what he was looking for. In essence, Alice lied to Bob — she published a claim that her notes were available on relay B, when in fact they weren't. If she had copied her `kind 1` event from relay A to relay B, however, Bob's query would have been successful.
 
-Less important but also worthwhile, is event deletion. This part of content migration is the responsibility of the relay operator, since they are the only person who has any incentive to free up their resources, although users could request deletion as a courtesy. This could get complex, since a relay won't necessarily have a complete view of every heuristic others are using to locate events on their relay. In any case, relays have the prerogative to delete whatever they want, so people storing data should be careful to choose relays that are properly aligned.
+Less important, but also worthwhile, is event eviction. When relay selection heuristics change, stored events may become undiscoverable, and therefore a waste of space.
 
-As of this writing, synchronization is absent from most or all implementations. In order for it to become possible, both protocol and implementations will have to be developed.
+This part of content migration is the responsibility of the relay operator, since they are the only person who has any incentive to free up their resources — although users could request eviction as a courtesy. It can also get complex, since a relay won't necessarily have a complete view of every heuristic others are using to locate events on their relay (for example if an event should be availble both via outbox and by inbox, it shouldn't be evicted if only the author's outbox changes). In any case, relays have the prerogative to delete whatever they want, so people storing data should be careful to choose relays that are properly aligned.
 
-In terms of implementations, convenient tools will have to exist to do this on behalf of those with incentives to migrate events. Clients might do this in the background on behalf of their users when relay selections change, and community admin tools might include synchronization affordances for community relays. Alternatively, watchtowers could be used to actively synchrnonize data according to certain heuristics. Users might even be able to pay these services to ensure that their content is properly available.
+Both the protocol and implementations will ultimately need to provide affordances for migration to users.
 
-In terms of the protocol, currently the only way to synchronize events to a new relay is to download all involved events and re-publish them manually, which can be fairly expensive in terms of bandwidth. A new primitive for asking a relay to synchronize certain relays from a peer would be a useful optimization. Similarly, there aren't currently any protocol affordances for requesting deletion of events - neither NIP 62 nor NIP 09 quite fit the bill, since they're more permanent.
+Currently, the only way to synchronize events to a new relay is to download all involved events and re-publish them manually, which can be fairly expensive in terms of bandwidth. A new primitive for asking a relay to synchronize certain relays from a peer would be a useful optimization. Similarly, there aren't currently any protocol affordances for requesting eviction of events — neither [NIP 62](https://github.com/nostr-protocol/nips/blob/master/62.md) nor [NIP 09](https://github.com/nostr-protocol/nips/blob/master/09.md) quite fit the bill.
 
-## Relays as Transport
+Synchronization is also currently absent from most (or all) implementations. In the future, clients might do this in the background on behalf of their users when relay selections change, and community admin tools might include synchronization affordances for community relays. Alternatively, watchtowers could be used to actively synchrnonize data according to certain heuristics. Users might even be able to pay these services to ensure that their content is properly available.
 
-Earlier I defined relays as "a repository of events." This definition can be exploited to do some interesting things not originally intended though. Specifically, relays can be used as a form of transport broker.
+### Relays as Transport
 
-A relay per se is rarely the final destination of a given event, but is rather an intermediary between producers and consumers. Communication via relays may be between humans (as with social media), or it may be used to allow different software applications to communicate. Both use cases are defined by the event `kind` that is used for payloads, and both are equally valid. This is the basis of some of Nostr's most interesting "other stuff".
+Earlier I defined relays as "a repository of events." This definition can be exploited to do some interesting things not originally intended. Specifically, relays can be used to broker transport.
 
-An example of this is NIP-46 Nostr Connect, which allows remote signers to monitor a relay for signature (or encryption/decryption) requests. The signer application holds the user's key, and the client asks the signer, via a relay and Nostr events, to do something with the key and return the result. The details of the flow are not important here, but because the relay is publicly addressable, the client and the signer are able to communicate.
+A relay per se is rarely the final destination of a given event, but is rather an intermediary between producers and consumers. Communication via relays may be between humans (as with social media), or relays may be used to allow different software applications to communicate. Both use cases are defined by the event `kind` that is used for payloads, and both are equally valid. This is the basis of some of Nostr's most interesting "other stuff".
 
-Other examples are Nostr Wallet Connect, which allow for applications to communicate with the user's bitcoin wallet, and any number of DVMs (or Data Vending Machines) which do arbitrary computations based on the event kind being used. In many cases, encryption is also employed to create a secure communication channel between parties.
+An example of this is [NIP 46](https://github.com/nostr-protocol/nips/blob/master/46.md) Nostr Connect, which allows remote signers to monitor a relay for signature (or encryption/decryption) requests. The signer application holds the user's key, and the client asks the signer, via a relay and Nostr events, to do something with the key and return the result. The details of the flow are not important here, but because the relay is publicly addressable the client and the signer are able to communicate.
 
-For people less interested in the social media dimension of Nostr, this is Nostr's killer feature. Communication via relay allows anyone to set up a service identified only by a public key rather than an IP address. This is useful for protecting service providers' privacy, and makes running small services extremely convenient. Using this model, service providers can be run in any internet-connected software, without dealing with the complexity involved with NAT traversal. And of course, because relays are interchangeable in terms of protocol, multiple relays can be used at the same time to broker communication.
+Other examples are [Nostr Wallet Connect](https://github.com/nostr-protocol/nips/blob/master/47.md), which allows for applications to communicate with the user's bitcoin wallet, and any number of [Data Vending Machines](https://github.com/nostr-protocol/nips/blob/master/90.md) (A.K.A. "DVM"s) which do arbitrary computations based on the event kind being used. In many cases, encryption is also employed to create a secure communication channel between parties.
 
-## The Relays Pattern
+Communication via relay allows anyone to set up a service identified only by a public key rather than an IP address. This is useful for protecting service providers' privacy, and makes running small services extremely convenient. Using this model, service providers can be run in any internet-connected software, without dealing with the complexity involved with NAT traversal. And of course, because relays are interchangeable in terms of protocol, multiple relays can be used at the same time to broker communication.
 
-Zooming out even further, relays are useful as a conceptual pattern that can be applied in the context of another protocol. In its simplest form, a relay independent of Nostr is just a server that implements a protocol, and which is advertised for selection by the end user on the Nostr network.
+### Relay as Design Pattern
+
+Zooming out even further, relays are useful as a conceptual pattern that can be applied in the context of other protocols. In its simplest form, a relay independent of Nostr is just a server that implements a protocol, and which is advertised for use by the end user on the Nostr network.
 
 For example, Blossom servers are media storage servers that run on a protocol distinct from Nostr, but are referred to using Nostr events. Defined in [BUD 03](https://github.com/hzrd149/blossom/blob/master/buds/03.md), `kind 10063` events allow Nostr users to advertise which Blossom servers they prefer to use so that other people can find their media even if the URL embedded in a social media post changes.
 
-This allows for the same kind of heuristic used for relay selection to be applied to other media servers, piggybacking on Nostr for the indexing and trust layers. And just like events, media can be replicated across multiple Blossom servers, introducing redundancy to media hosting.
+This allows for the same kind of heuristic used for relay selection to be applied to media servers, piggybacking on Nostr for the indexing and trust layers. And just like events, media can be replicated across multiple Blossom servers, introducing redundancy to media hosting.
 
-Blossom applies the same pattern pioneered by Nostr of interchangeable protocol servers to media storage. Another example is Cashu Mints, which speak the Cashu protocol. This pattern is not unique to the Nostr protocol ecosystem either - Git, ActivityPub, FTP, XMPP, and many other internet protocols also follow this pattern. But Nostr is an exceptionally clear example of how useful this pattern is when used in conjunction with signed data.
+Blossom applies the same pattern pioneered by Nostr of interchangeable protocol servers to media storage. Another example is Cashu Mints, which speak the Cashu protocol. This pattern is not unique to the Nostr protocol ecosystem either - Git, ActivityPub, FTP, XMPP, and many other internet protocols also do this, but Nostr is an exceptionally clear example of how useful this pattern is, especially in conjunction with signed data.
 
-## Wrapping Up
+### Wrapping Up
 
-This was a long chapter, for which I apologize. But its length is appropriate because relays are the most important part of Nostr. Even more important, I would argue, than signed data. Both are necessary conditions for Nostr to work, but the network architecture is what is really novel compared with digital signatures, which have been around for 50 years and yet haven't gained widespread end-user adoption.
+This was a long chapter, for which I apologize. But its length is appropriate because relays are a *sine qua non* of Nostr's architecture. Signed data has been around for 50 years, and yet hasn't gained widespread end-user adoption, in part because communication and storage have remained permissioned or proprietary. Relays have the ability to unlock signed data for everyday use.
 
-I'm also sure many parts of this chapter left you utterly confused as to what I was talking about. The complexity involved in dealing with relays is in part a natural result of the many different use cases supported by Nostr. But I'll be the first to admit that a fair amount of incidental complexity has also snuck in as the protocol has developed.
+I'm sure many parts of this chapter left you utterly confused as to what I was talking about. The complexity involved in dealing with relays is in part a natural result of the many different use cases supported by Nostr. But I'll be the first to admit that a fair amount of incidental complexity has also snuck in as the protocol has developed.
 
 It may be that a successor protocol comes along and borrows the good parts of Nostr without any of the bad parts. But for now, it's enough to understand what relays are, and how to use them.
 
-# Chapter 5: Radically Open
+## 5. Radically Open
 
-All protocols exist on a spectrom between open and closed.
+All protocols exist on a spectrum between open and closed.
 
 Open protocols invite anyone to participate and build; closed protocols reserve participation to a select few. Closed protocols don't have a published specfication, don't have publicly available source code that can be used to reverse engineer the it, and can only be used by authorized developers. Access might be restricted by law, obscurity, complexity, or secrecy. Some closed protocols even lock things down with cryptography using techniques like DRM or VIN locking.
 
@@ -807,7 +819,7 @@ There is an important qualification to this though. One application with no user
 
 Every protocol feature exists on a spectrum between zero and universal adoption. Because the entire point of a protocol is to standardize something between implementations, this means that the extent to which a given standard is adopted determines how much a part of "the protocol" it is.
 
-## Politics and Protocol
+### Politics and Protocol
 
 Efforts to standardize the Nostr Protocol are more akin to discovery than invention. There is a massive design space for the Nostr Protocol, and it's individual developers who explore that design space to find new solutions to problems. The people that document those solutions are only recording what has been built in the wild. This book is a good example; in it I offer a fair amount of prescriptive advice - but it's up to you to decide whether to follow it.
 
@@ -827,7 +839,7 @@ That said, protocol decentralization will need to happen sooner or later. The ra
 
 May people already self-host their own NIPs, or even create alternative curations of protocol features. See [Appendix B](./0b-resources.md) for a non-exhasutive list. The main problem with this is that it makes consensus more difficult and therefore weakens interoperability. If there are 50 different sources for protocol features, it becomes hard to discover them all. Right now, the NIPs repository is the place where the most visibility exists into new protocol proposals.
 
-But the Nostr Protocol could eventually be moved to Nostr. There have been attempts at this, such as [NostrHub](https://nostrhub.io) and [Wikifreedia](https://wikifreedia.xyz/), though they haven't been fully developed or adopted, and have some outstanding problems. At a minimum, here's what would be necessary to make such a project viable:
+But the Nostr Protocol could eventually be moved to Nostr. There have been attempts at this, though they haven't been fully developed or adopted, and have some outstanding problems. At a minimum, here's what would be necessary to make such a project viable:
 
 - The ability to fork a spec and view the version history across all forks. Replaceable events don't work for this because they don't include old versions.
 - The ability for implementations to signal spec and version support is required to help others decide which to implement in order to be interoperable. Ideally, the reputation of a given opinion would be based on ownership of relevant NIP 89 listings and their attendant user recommendations. This ensures inconsequential implementations don't derail interoperability, and could be set up to avoid over-weighting extremely popular implementations by capping reputation-based weighting.
@@ -840,7 +852,7 @@ Luckily, incentives work in our favor because interoperability is the key value 
 
 This criteria also helps reduce scope, since a lot of things don't need to be interoperable. For example, mobile push notifications are cryptographically tied to a particular app, which means there's no real point in including them - systems can't talk to each other anyway.
 
-## Thinking in Public
+### Thinking in Public
 
 One thing that has obscured the actual dynamics of Nostr's protocol development is the use of the NIPs repo for speculative proposals as well as for documentation of existing work.
 
@@ -858,7 +870,7 @@ But this is all by design. And I won't say that there aren't large existential r
 
 In fact, most successful protocols are more or less like this. Protocols (and software) designed in a top-down manner frequently end up failing to live up to their design goals. It's only through implementation that what is actually needed can be understood, and it's only through implementation that multiple implementations can exist to interoperate in the first place. Nostr takes the implementation-first approach to an extreme.
 
-## Backwards Compatiblity
+### Backwards Compatiblity
 
 Prioritizing implementations doesn't mean that the process of design, review, and feedback is not necessary though. In Nostr's openness and "shoot first ask questions later" environment, a lot of discussion and review still happens, just well after protocol features become "official." Just because something is in the NIPs repo doesn't make it sacred.
 
@@ -888,7 +900,7 @@ One thing to keep in mind, however, is that this kind of adversarial action can 
 
 Forks are a fact of life in the context of an adversarial system. Any actor can choose to fork at any time, for any reason. Even if some forks are well-intentioned and constructive, others may not be. For this reason, implementers must always be prepared to defend their version of the protocol both technically (through defensive coding) and politically (by educating users about the fork and persuading other developers of their view). Core protocol features will gain momentum over time, contributing to stability, but there will always be a certain amount of chaos at the edges. This chaos is a necessary consequence of a radically open protocol.
 
-## Hackability
+### Hackability
 
 I've been talking a lot about what interoperability is and how to support it, but I haven't really mentioned what exactly interoperability is for. What good is it for multiple implementations to be able to talk to each other?
 
@@ -920,7 +932,7 @@ It could very well be that AI assistance, both in coding and in research and man
 
 It's also possible that human nature and our willingness to put up with incredible levels of inconvenience will leave this opportunity untapped. The relative lack of adoption even simple things like browser extensions has seen is evidence of our natural inclination to be slaves to our technology. But it's possible AI agents may lead to the spread of something akin to the "hacker mentality" even among non-technical users - not because they make hacking "easy", but by unlocking the universal language of computing for use by non-specialists.
 
-## Application Ecosystems
+### Application Ecosystems
 
 Given the radical openness of the Nostr protocol, some additional mechanisms are necessary in order to cope with the certainty of running into event kinds that implementations don't recognize. It's categorically impossible for clients to implement support for every Nostr data format because new formats are created constantly. Implementations have to have a strategy for dealing with events they don't understand.
 
@@ -966,7 +978,7 @@ An increase in complexity makes an environment harder to understand as a whole, 
 
 This is a truer form of "social media" than the sanitized, corporate marketing machines which seek to quantify relationships and extract value. If we "embrace the chaos" of the Nostr protocol, it can become much harder to quantify, let alone control, to the benefit of its users.
 
-# Chapter 6: Value for Value
+## 6. Value for Value
 
 The native currency of the internet is not a form of money, but attention.
 
@@ -984,7 +996,7 @@ The same is true in a digital goods context, for example, on streaming services.
 
 We pay for access to the internet with our time and attention, and we do it on their terms, not our own.
 
-## Money is Time
+### Money is Time
 
 In his talk entitled "You Wouldn't Zap a Car Crash," Gigi points out this quirk of language: that we *pay* attention and *spend* time. Money is a proxy for the time we have spent accumulating it. But on the internet, that relationship has been reversed. Our time has become a proxy for the money that platforms wish to accumulate.
 
@@ -1006,7 +1018,7 @@ If the internet were powered by microtransactions rather than attention parasiti
 
 Nostr makes this vision possible, at least on a technical level, through Bitcoin micropayments encoded into Nostr events known as "zaps".
 
-## Customers, Patrons, and Participants
+### Customers, Patrons, and Participants
 
 The idea of "value-for-value" has been around for quite a while, particularly in the podcasting 2.0 space, where listeners can stream satoshis to the podcast they're listening to in order to show appreciation for the content they're consuming. The idea is that because the payment is voluntary, it demonstrates that people are willing to compensate producers based on value received. But this is an inadequate understanding of what is actually going with this model.
 
@@ -1042,7 +1054,7 @@ We see this same limit on scale in the growth patterns of certain types of busin
 
 At the end of the day, it is possible to make a value for value model work - but it's important to understand the dynamics actually in play.
 
-## Zaps and Nutzaps
+### Zaps and Nutzaps
 
 With all that out of the way, let's get into the nuts and bolts of value-for-value micropayments on Nostr.
 
@@ -1080,7 +1092,7 @@ Distributing user funds across multiple mints does protect the user to some exte
 
 Both forms of zaps have their use cases, with significant trade-offs involving custodian trustworthiness. In general, NIP 57 zaps are probably a better solution for most users since wallet providers are going to be more accountable to users at scale. However, if eCash mints can be selected based on existing trust relationships (the "uncle jim" model), NIP 61 nutzaps can become a viable alternative for those users, bringing with it a superior user experience.
 
-# Chapter 7: Communities
+## 7. Communities
 
 In 2020, Twitter surprised everyone by censoring several high-profile accounts. This directly contradicted the ethos they had carefully cultivated over the previous decade of being a place where news breaks and ideas can be discussed. When they started censoring political content to appease advertisers, they undermined this journalistic ethos in the same way that mainstream media has been for a long time.
 
@@ -1090,7 +1102,7 @@ Access controls are similar in many ways to censorship, in that they limit the a
 
 I've covered the implications to user privacy of an open network elsewhere, but in this chapter I want to talk about access controls on Nostr from the perspective of digital communities. Communities have a different goal than broadcast social networks, which presents the problem of how (or whether) to adapt nostr to use cases that require access controls.
 
-## Communities are for People
+### Communities are for People
 
 Journalism is about information, facts, and opinions which can be objectified, analyzed, shared and remixed freely. Communities, on the other hand, are about people, whose identities are complex and dynamic, who have a personal experience of the world, are self-interested and responsible for their actions, are self-aware and self-reflective, who have beliefs, intentions, preferences, memory, and imagination.
 
@@ -1110,7 +1122,7 @@ Unfortunately, understanding the different types of communities (and how to serv
 
 Communities also exist in community with one another - to the extent that their members interact (or have membership in multiple communities), communities will be affected by each other. A community is therefore itself a higher-level organism which itself inhabits an ecosystem comprised of a whole complex of technologies, contexts, and individuals.
 
-## Digital Architecture
+### Digital Architecture
 
 The key thing to keep in mind when designing digital spaces for communities to inhabit is that the responsibility for healthy community functioning is ultimately up to the members and leaders in a given community, but design may be employed to support that functioning.
 
@@ -1152,7 +1164,7 @@ Below I will propose a few categories of community, and some ideas about how to 
 - Activity-oriented groups
 - Identity-oriented groups
 
-## Social Clusters
+### Social Clusters
 
 In their most organic form, communities exist only as emergent properties of individual relationships within an open network. Another term for this is "social clusters", which can be identified mathematically through graph analysis, or simply by gestalt.
 
@@ -1168,7 +1180,7 @@ The prominence of various members within a social cluster varies widely as well.
 
 This use case is served well by broadcast social media, but is simultaneously supported by smaller-scale forms of association which allow members to evolve the group identity without attracting undesired attention.
 
-## Group Chats
+### Group Chats
 
 At the other end of the spectrum are group chats. Group chats are a fairly well-defined type of community because in general their members are also well-defined. Many group chats are comprised of only two people, for example text message conversations or direct messages, but can scale to dozens, or even hundreds, of members.
 
@@ -1190,7 +1202,7 @@ For this reason, the medium of group chats simply cannot scale without a way to 
 
 For this reason, chat groups tend to be either ephemeral and practical, organized around some short-term need for coordination, or they are predicated on a high level of relational trust shared between all members of the group.
 
-## Discussion Forums
+### Discussion Forums
 
 Let's bounce back now to the other end of the spectrum. Just this side of "social cluster" type communities are "discussion forums".
 
