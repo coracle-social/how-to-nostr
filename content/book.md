@@ -1102,6 +1102,8 @@ With all that out of the way, let's get into the nuts and bolts of value-for-val
 
 While other payment mechanisms (e.g., onchain bitcoin, monero, and even fiat) have been proposed, there are currently two standards for micropayments on Nostr, both built on bitcoin.
 
+#### Lightning Zaps
+
 The first (and original) is [NIP 57](https://github.com/nostr-protocol/nips/blob/master/57.md) zaps, which allow users to couple the payment of a Lightning invoice (requested from the receiver's wallet) to a Nostr event that gets published by the sender's wallet, creating a public artifact demonstrating that they paid the receiver. The flow is fairly complex, so here's a diagram, borrowed from [nostr.how](https://nostr.how):
 
 ![How Zaps Work](https://nostr.how/images/zap-flow.webp)
@@ -1110,31 +1112,31 @@ Zaps support all of the value for value use cases mentioned above and can even b
 
 There are a couple important limitations to zaps. First is that it requires both the sender and the receiver's wallets to be online. This means that wallets either have to be self-hosted, which is a significant hurdle for non-technical users, or they have to be custodial.
 
-All things considered, this isn't a huge deal. For most use cases involving zaps, the amounts sent and received are pretty small. Having 100k satoshis in a hot wallet hosted by a third party isn't a huge risk for the user.
+The other important flaw is that zap receipts are only useful to the extent that the receiver's wallet can be trusted to competently issue them. This means that the wallet can create as many fake zaps as they want by issuing receipts for invoices that weren't actually paid. Or, zap receipts might be incorrectly constructed, delivered to the wrong relays, or just not issued at all. Because of this, it's fairly common to pay for a zap but fail to receive the social benefit — without any ability to get a refund.
 
-However, at scale, a single custodian for many wallets becomes a central point of failure, not only in terms of availability, but also privacy and solvency. The other important flaw is that zap receipts can only be trusted to the extent that the receiver's wallet can be trusted. This means that the wallet can create as many fake zaps as they want by issuing receipts for invoices that weren't actually paid.
+Even if a wallet provider is both competent and honest, anyone can create any number of sock puppet accounts and use them to send zaps to their own wallet. To avoid this problem, implementations have to filter zaps by sender based on web of trust (or another mechanism). For services that provide a "trending" feed based on zaps, this is especially important.
 
-In practice, this isn't a fatal flaw, because there's a much worse attack — even if a wallet provider is honest, anyone can create any number of sock puppet accounts and use them to send zaps to their own wallet.
-
-To avoid this problem, implementations might filter zaps by sender based on web of trust (or another mechanism). This is a minor concern for regular clients, since the worst that can happen in most cases is for a note the user has already fetched to show a higher zap total than it should. But for services that provide a "trending" feed based on zaps, it's very important to only rely on zaps that are likely to be authentic. This attack has been implemented a handful of times for demonstration purposes, but most clients don't bother to provide sybil protection yet.
-
-Another issue with [NIP 57](https://github.com/nostr-protocol/nips/blob/master/57.md) zaps is that the protocol is interactive — this introduces room for error if wallet implementations are poorly put together. Zap receipts might be incorrectly constructed, delivered to the wrong relays, or just not issued at all. Because of this, it's fairly common to pay for a zap but fail to receive the social benefit — without any ability to get a refund.
+#### Nutzaps
 
 Next up we have [NIP 61](https://github.com/nostr-protocol/nips/blob/master/61.md) "nutzaps", which are an entirely separate standard powered by pubkey-locked Cashu tokens (hence the pun).
 
-In contrast to [NIP 57](https://github.com/nostr-protocol/nips/blob/master/57.md) zaps, nutzaps can be sent, received, and validated offline as long as the receiver's `kind 17375` wallet event (defined by [NIP 60](https://github.com/nostr-protocol/nips/blob/master/60.md)) is already available. This makes nutzaps much faster because they're non-interactive. Unlike [NIP 57](https://github.com/nostr-protocol/nips/blob/master/57.md) zaps, nutzaps do not depend on a third party to correctly issue a receipt.
+The neat thing about ecash zaps is that they don't rely on any third party to facilitate a transaction — the ecash is *in* the wallet. This makes implementation significantly easier; with no external services to work with (apart from mints, which are interchangeable), a [NIP 60](https://github.com/nostr-protocol/nips/blob/master/60.md) ecash wallet can included in any application simply by calling a library. And because [NIP 60](https://github.com/nostr-protocol/nips/blob/master/60.md) wallets are stored as `kind 17375` Nostr events, your ecash follows you across the network, just like your profile or relay selections.
 
-Because the Cashu tokens are locked to the receiver's pubkey, the receiver can immediately verify that the eCash has not been double spent. This solves the problem of untrustworthy receiver wallets, but it doesn't provide sybil resistance.
+Because the Cashu tokens are locked to the receiver's pubkey, the receiver can immediately verify that the eCash has not been double spent. This solves the problem of untrustworthy receiver wallets, although it doesn't provide sybil resistance on its own.
 
-Nutzaps have an additional vulnerability in that all value in the form of eCash tokens is in custody of the eCash mint. These mints are the ones that provide the proof that a token has been locked to a given pubkey. But if the mint is not trustworthy, it can allow double spends, or even withdraw the bitcoin backing the tokens from the mint entirely.
+#### Custodian Risk
 
-Both eCash and custodial lightning payments are vulnerable to custodians in a similar way. In both cases, the reputation of a given wallet or mint is largely predicated on how well the service is run in terms of availability, performance, or operator reputation. The difference between the two is that because of money transmitter laws, mint operators tend to prefer anonymity, while custodial lightning wallets are usually more easily identifiable. The result is that mints generally will have a lower trust profile.
+Both eCash and custodial lightning payments are vulnerable to custodians in different ways.
 
-In either case though, operators can choose to steal all the money backing their service at any time. This attack completely burns the service provider's reputation (and would likely result in prison time if the operator can be identified), but it also can't really be anticipated by users.
+In both cases, the reputation of a given wallet or mint is largely predicated on how well the service is run in terms of availability, performance, or operator reputation. The difference between the two is that because of money transmitter laws, custodial lightning wallets are usually more easily identifiable, but also subject to arbitrary enforcement of regulations.
 
-Distributing user funds across multiple mints does protect the user to some extent because if a mint operator rugs, users will lose only part of their balance. This is similar to Nostr relay redundancy, which works because information can be freely copied. Unfortunately, money doesn't work the same way. Reducing the risk to an individual user doesn't solve the incentive that mint operators have to build up their reputation over the course of years and finally steal all the money when they reach critical mass.
+At scale, a single custodian for many wallets becomes a central point of failure, not only in terms of availability, but also privacy, solvency, and censorship. While most wallet providers are unlikely to simply steal funds and disappear, they may be compelled to implement KYC/AML checks or arbitrarily close certain accounts.
 
-Both forms of zaps have their use cases, with significant trade-offs involving custodians. In general, [NIP 57](https://github.com/nostr-protocol/nips/blob/master/57.md) zaps are probably a better solution for most users since wallet providers are going to be more accountable to users at scale. However, if eCash mints can be selected based on existing trust relationships (the "uncle Jim" model), [NIP 61](https://github.com/nostr-protocol/nips/blob/master/61.md) nutzaps can become a viable alternative for those users, bringing with it a superior user experience.
+At the same time, eCash mint operators (who are often anonymous in order to avoid scrutiny under money transmitter laws) are unable to target individual users due to eCash being a bearer instrument, but can at any time drain the bitcoin backing the eCash, making tokens worthless. This attack would completely burn the provider's reputation (and would likely result in prison time if the operator can be identified), but it also can't really be anticipated by users.
+
+Distributing user funds across multiple mints or wallets does protect the user to some extent because if a service provider rugs, users will lose only part of their balance. This is similar to Nostr relay redundancy, which works because information can be freely copied. Unfortunately, money doesn't work the same way — even if you only lose some of your money, you still really lose it.
+
+One thing that can mitigate this custody risk, in either case, is the "Uncle Jim" model, in which lightning nodes or eCash mints are provided to users within an existing trust structure — for example, within a family, friend group, church, or local community.
 
 ## 7. Communities
 
