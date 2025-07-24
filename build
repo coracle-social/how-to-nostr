@@ -1,0 +1,4 @@
+#!/bin/bash
+
+composer global exec ibis-next pdf
+composer global exec ibis-next epub
