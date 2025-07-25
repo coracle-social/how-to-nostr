@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Nostr - A Guide for Developers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        main.container {
+            background: white;
+            margin: 2rem auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 3rem 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .section-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .quote {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .quote blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+
+        .quote cite {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="hero">
+                <h1>Building Nostr</h1>
+                <p class="subtitle">A comprehensive guide for developers building on the decentralized social protocol</p>
+                <div class="download-buttons">
+                    <a href="export/building-nostr.epub" class="btn" download>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Download EPUB
+                    </a>
+                    <a href="export/building-nostr-light.pdf" class="btn btn-secondary" download>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <div class="section-content">
+                <h2>About the Book</h2>
+                <p>
+                    "Building Nostr" is more than a technical manual—it's a philosophical exploration of how we can reclaim the internet from surveillance capitalism. This book presents Nostr not just as a protocol, but as a paradigm shift toward user-centric digital architecture.
+                </p>
+                <p>
+                    Written for builders who are excited about decentralization and have ideas for products that would benefit from interoperability and user-oriented software, this guide emphasizes the responsibility developers have to keep the internet decentralized.
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-content">
+                <h2>What You'll Learn</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🔐 Cryptographic Identity</h3>
+                        <p>Understand how digital signatures and key pairs create user-owned identities that can't be captured by platforms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📡 Relay Architecture</h3>
+                        <p>Master the art of building censorship-resistant applications using Nostr's multi-relay infrastructure.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🌐 The Outbox Model</h3>
+                        <p>Learn intelligent routing strategies that keep Nostr decentralized as it scales to millions of users.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⚡ Value for Value</h3>
+                        <p>Explore Bitcoin micropayments and how they enable sustainable creator economies without surveillance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🏛️ Digital Communities</h3>
+                        <p>Design community spaces that serve human flourishing rather than engagement metrics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔓 Radical Openness</h3>
+                        <p>Embrace the chaos of permissionless innovation while maintaining protocol integrity.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-content">
+                <h1>Get the Book</h1>
+                <p class="subtitle">Download the book for free in EPUB or PDF format.</p>
+                <div class="download-buttons">
+                    <a href="export/building-nostr.epub" class="btn" download>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Download EPUB
+                    </a>
+                    <a href="export/building-nostr-light.pdf" class="btn btn-secondary" download>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/coracle-social/building-nostr" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+                        <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"/>
+                    </svg>
+                </a>
+                <a href="https://coracle.social/nprofile1qy2hwumn8ghj7un9d3shjtnyv9kh2uewd9hj7qgewaehxw309a5xyu3wvdhhyctrd3jjuum0vd5kzmp0qy88wumn8ghj7mn0wvhxcmmv9uqzp978pfzrv6n9xhq5tvenl9e74pklmskh4xw6vxxyp3j8qkke3cez89pzj9" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+                        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
+                    </svg>
+                </a>
+            </div>
+            <p>&copy; 2024 Building Nostr. Released under open license.</p>
+        </div>
+    </footer>
+</body>
+</html>
