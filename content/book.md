@@ -1096,6 +1096,26 @@ We see this same limit on scale in the growth patterns of certain types of busin
 
 At the end of the day, it is possible to make a value for value model work — but it's important to understand the dynamics actually in play.
 
+### Paying It Forward
+
+Micropayments are not inherently social; there are some use cases that may not be as exciting or obvious, but may be even more important.
+
+Money is most commonly used to pay for goods and services. A more obvious statement could hardly be made, but given that the previous section was all about paying for social status (which is neither a good nor a service), it seemed worth repeating.
+
+In the software world, this generally takes the form of puchasing a software product which the user intends to interact with directly. This creates an asymmetric payoff for products that are user-facing vs software libraries that are invisible to the user. This is a well-known problem, and has resulted in [attempts](https://opensourcepledge.com/) to support open-source developers by asking businesses to pledge a certain amount of support.
+
+This system *could* work, in the same way that patronage works; businesses that do support open source can use such donations as a tool for self-promotion. But given that donations are entirely voluntary, and because large businesses are part of the problem Nostr is attempting to solve, this approach has its limits.
+
+But what if instead of asking the companies that rely on open-source software to support developers, we asked *users* to do it directly? With the integration of wallets into Nostr clients, this becomes possible. A client could simply include a manifest which lists the libraries it relies upon, along with Nostr pubkeys for the developers, and users could *directly* donate to all contributors to the software they're using.
+
+This would involve finding solutions for a number of problems, from falsification of developer pubkeys to UX, and the incentives might not work out anyway.
+
+But even if the libraries can't get support this way, the services that users interact with can. To the extent that clients transparently mediate a user's relationship with a third party service (like a relay, or a DVM), they can include affordances that allow users to support those services directly, without having to actually handle any of the money.
+
+In fact, some work has already been done in this area; [Keychat](https://www.keychat.io/) supports relays by sending ecash tokens in-band, and [NIP 90](https://github.com/nostr-protocol/nips/blob/master/90.md) includes affordances for paying DVMs for their work. Relays could also charge money to publishers as a spam mitigation mechanism, or to gatekeep relay-based communities.
+
+None of these ideas have been widely adopted because Nostr is still in its bootstrapping phase, but if you squint your eyes you can see this aspect of the new internet taking shape — where money is deeply integrated into the very protocols that facilitate communication. To the extent this can be achieved, our attention can finally stop being the currency of the internet.
+
 ### Zaps and Nutzaps
 
 With all that out of the way, let's get into the nuts and bolts of value-for-value micropayments on Nostr.
