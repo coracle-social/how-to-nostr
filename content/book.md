@@ -1396,15 +1396,17 @@ Nostr is inspired by and builds on Scuttlebutt's successes.
 
 ### Pubky
 
-[Pubky](https://www.pubky.org/) is a social protocol created by John Carvalho, which uses cryptographic identity and home servers.
+[Pubky](https://www.pubky.org/) is a web protocol created by Synonym, which invented public key domains, homeservers, indexers to provide "semantic social graphs" by aggregating homeserver data.
 
-There are two parts to Pubkey. First, cryptographic identities are used to create and maintain entries on the [Mainline DHT](https://en.wikipedia.org/wiki/Mainline_DHT) in order to route requests to the correct server. The Mainline DHT is the most used DHT in existence and is highly Sybil-resistant, which makes it a much better index than Nostr relays can provide.
+There are two major novel aspects to Pubky. First, cryptographic identities are used to create and maintain DNS entries in the [Mainline DHT](https://en.wikipedia.org/wiki/Mainline_DHT), in order to route requests to the correct server. The Mainline DHT is the most used DHT in existence and is highly Sybil-resistant, with millions of nodes, which makes it a much better index than Nostr relays can provide. This scheme allows for a credible exit from trusted servers when they misbehave, because anyone can run a homeserver, or choose a host, safely.
 
-On Nostr, indexes are simply relays that store a particular kind of event. This works ok, but is an area where Nostr might borrow from Pubky in order to improve the resilience of Nostr bootstrapping. Unfortunately, Mainline requires the use of a different elliptic curve, and so a different DHT will need to be used or Nostr keys will have to be adapted to whatever curve Mainline uses.
+In Nostr, indexes are simply relays that store a particular kind of event. This works ok, but is an area where Nostr might borrow from Pubky in order to improve the resilience of Nostr bootstrapping. Unfortunately, Mainline requires the use of a different elliptic curve, and so a different DHT will need to be used or Nostr keys will have to be adapted to whatever curve Mainline uses.
 
-The second half of Pubky is home servers, which have the same problems that Mastodon and Matrix home servers do, except that they can't nuke user identities (since identities are cryptographic). However, content is not signed, and is stored only on a single home server. For most people, servers are going to be hosted by a third party, which would then have the ability to censor any content it chooses.
+The second novel aspect of Pubky is the Semantic Social Graph, which is a graph made of tags that users apply to any other key or URL. Applications can depend on, or provide, a Pubky Nexus indexer to aggregate data from homeservers into a Semantic Social Graph. This allows both contexual web-of-trust use cases, and new ways coordinate users and data on the web.
 
-Pubky almost gets user-centric network architecture right, but fails to solve the problem of aligned storage.
+In Synonym's flagship Pubky application, "pubky.app", the content is not key-signed as in Nostr, but applications could be built to utilize similar event-signing if desired. Instead, Synonym intends to implement other data versioning and data enforcement designs.
+
+Pubky gets user-centric network architecture right by giving users total control of their data and a credible exit from anyapp environment without losing context, while still allowing for scaling and centralized service in a safe way.
 
 ### Bluesky
 
